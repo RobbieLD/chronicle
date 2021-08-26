@@ -1,12 +1,12 @@
-import { createStore } from 'vuex'
+import { InjectionKey } from 'vue'
+import { createStore, Store } from 'vuex'
+import userModule from './modules/user.module'
+import RootState from './states/root.state'
 
-export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+export const key: InjectionKey<Store<RootState>> = Symbol()
+
+export const store = createStore<RootState>({
+    modules: {
+        user: userModule,
+    }
 })
