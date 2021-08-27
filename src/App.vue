@@ -3,7 +3,7 @@
         <main-menu @navigate="closeMenu"></main-menu>
     </Sidebar>
     <Sidebar v-model:visible="addIsOpen" position="full">
-        <add-movie></add-movie>
+        <add-movie @saved="closeAddPanel"></add-movie>
     </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
     <div class="content" style="background-image: url('bg.jpg')">
@@ -57,7 +57,7 @@
                 openMenu,
                 closeMenu,
                 openAddPanel,
-                closeAddPanel,
+                closeAddPanel
             }
         },
     })

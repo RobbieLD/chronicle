@@ -33,7 +33,7 @@
                 <Dropdown class="add-movie__field" id="year" v-model="selectedYear" :options="years" placeholder="Select a year" />
             </div>
             <div class="p-field add-movie__row">
-                <Button label="Save" @click="save" />
+                <Button :label="saving ? 'Saving' : 'Save'" @click="save" :disabled="saving" />
             </div>
         </div>
     </div>
@@ -58,7 +58,8 @@
             Dropdown,
             Button
         },
-        setup() {
+        emits: ['saved'],
+        setup(props, { emit }) {
             const service = new MovieService()
             let imageBaseUrl = ''
             let imageSizes: string[]
@@ -68,6 +69,7 @@
             const rating = ref<number>()
             const selectedYear = ref<number>()
             const invalid = ref(false)
+            const saving = ref(false)
 
             // We need to get the config values first
             service.Configuration().then((config: MovieConfiguration) => {
@@ -77,9 +79,16 @@
             })
 
             const save = async () => {
-
                 invalid.value = selectedMovie.value === undefined
-                console.log('save')
+
+                if (invalid.value) {
+                    return
+                }
+
+                saving.value = true
+                setTimeout(() => {
+                    emit('saved')
+                }, 2000)
             }
 
             const movieSearch = async (event: AutoCompleteEvent) => {
@@ -97,7 +106,8 @@
                 selectedYear,
                 years: ChronicleConfig.Years(),
                 save,
-                invalid
+                invalid,
+                saving
             }
         },
     })
