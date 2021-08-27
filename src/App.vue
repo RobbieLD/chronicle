@@ -6,7 +6,7 @@
         <add-movie @saved="closeAddPanel"></add-movie>
     </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
-    <div class="content" style="background-image: url('bg.jpg')">
+    <div class="content grid">
         <router-view />
     </div>
     <add-button @clicked="openAddPanel"></add-button>
@@ -70,6 +70,8 @@
         margin: 0;
         padding: 0;
         height: 100%;
+        background-attachment: fixed;
+        background-size: cover;
     }
 
     #app {
@@ -84,11 +86,10 @@
     }
 
     .content {
-        flex: 1 0 auto;
+        // flex: 1 0 auto;
         padding: 0.5em;
-        background-size: cover;
-        display: flex;
-        flex-wrap: wrap;
+        // display: flex;
+        // flex-wrap: wrap;
     }
 
     .p-sidebar-content {

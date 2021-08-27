@@ -1,18 +1,20 @@
 <template>
-    <Card class="movie" v-for="(data, index) in movies" :key="index">
-        <template #header>
-            <img alt="Poster" :src="data.movie.poster.url" />
-        </template>
-        <template #title> {{ data.movie.name }} </template>
-        <template #content>
-            <div>
-                <ProgressBar :value="data.rating" :showValue="true" />
-            </div>
-        </template>
-        <template #footer>
-            TODO
-        </template>
-    </Card>
+    <div class="col-fixed" v-for="(data, index) in movies" :key="index">
+        <Card class="movie">
+            <template #header>
+                <img alt="Poster" :src="data.movie.poster.url" />
+            </template>
+            <template #title> {{ data.movie.name }} </template>
+            <template #content>
+                <div>
+                    <ProgressBar :value="data.rating" :showValue="true" />
+                </div>
+            </template>
+            <template #footer>
+                TODO
+            </template>
+        </Card>
+    </div>
 </template>
 <script lang='ts'>
     import { defineComponent, ref } from 'vue'
@@ -44,7 +46,6 @@
 <style lang='scss' scoped>
     .movie {
         width: 12em;
-        height: 31em;
         margin: 0.5em;
 
         &__rating {
