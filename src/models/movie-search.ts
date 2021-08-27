@@ -27,12 +27,17 @@ export default class MovieSuggestion {
         const year = result.release_date.split('-')[0]
         this.name = `${result.title} (${year})`
         this.poster = {
-            url: `${baseImageUrl}/${imageSizes[0]}/${result.poster_path}`,
-            width: Number.parseInt(imageSizes[0].split('w')[1])
+            url: `${baseImageUrl}/${imageSizes[2]}/${result.poster_path}`,
+            width: Number.parseInt(imageSizes[2].split('w')[1])
         }
     }
 }
 
+export interface MovieData {
+    movie: MovieSuggestion,
+    rating: number,
+    year: number
+}
 export default interface MovieSearchResult {
     page: number;
     results: Result[];

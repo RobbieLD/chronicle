@@ -22,14 +22,11 @@
                 </AutoComplete>
             </div>
             <div class="p-field add-movie__row add-movie__poster">
+                <Slider v-model="rating" class="add-movie__rating" orientation="vertical" />
                 <img class="add-movie__poster" :src="selectedMovie?.poster?.url" :width="selectedMovie?.poster?.width"/>
             </div>
             <div class="p-field add-movie__row">
-                <label for="year">Rating</label>
-                <Rating class="add-movie__field" v-model="rating" :stars="10" />
-            </div>
-            <div class="p-field add-movie__row">
-                <label for="year">Movie Name</label>
+                <label for="year">Year Seen / Rating: {{ rating }}</label>
                 <Dropdown class="add-movie__field" id="year" v-model="selectedYear" :options="years" placeholder="Select a year" />
             </div>
             <div class="p-field add-movie__row">
@@ -45,16 +42,18 @@
     import MovieConfiguration from '@/models/movie-configuration'
     import AutoCompleteEvent from '@/models/prime-events'
     import MovieSuggestion from '@/models/movie-search'
-    import Rating from 'primevue/rating'
+    import Slider from 'primevue/slider'
     import Dropdown from 'primevue/dropdown'
     import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
+    import firebase from 'firebase/app'
+    import 'firebase/database'
 
     export default defineComponent({
         name: 'AddMovie',
         components: {
             AutoComplete,
-            Rating,
+            Slider,
             Dropdown,
             Button
         },
@@ -86,9 +85,18 @@
                 }
 
                 saving.value = true
-                setTimeout(() => {
+                
+                const databaseRef = firebase.database().ref('/movies')
+
+                databaseRef.push({
+                    movie: selectedMovie.value,
+                    rating: rating.value || 0,
+                    year: selectedYear.value || 0
+                }).then(() => {
                     emit('saved')
-                }, 2000)
+                }).catch((e) => {
+                    console.error(e)
+                })
             }
 
             const movieSearch = async (event: AutoCompleteEvent) => {
@@ -130,6 +138,10 @@
         &__poster {
             display: flex;
             justify-content: center;
+        }
+
+        &__rating {
+            height: 20em;
         }
     }
 </style>

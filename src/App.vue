@@ -87,6 +87,8 @@
         flex: 1 0 auto;
         padding: 0.5em;
         background-size: cover;
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .p-sidebar-content {
