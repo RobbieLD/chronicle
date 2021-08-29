@@ -90,7 +90,8 @@
 
                 databaseRef.push({
                     movie: selectedMovie.value,
-                    rating: rating.value || 0,
+                    myRating: rating.value || 0,
+                    globalRating: selectedMovie.value?.rating || 0,
                     year: selectedYear.value || 0
                 }).then(() => {
                     emit('saved')

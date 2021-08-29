@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Login from '../views/Login.vue'
 import Movies from '../views/Movies.vue'
 import Musicals from '../views/Musicals.vue'
-import firebase from 'firebase/app'
+import { store } from '@/store'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -33,13 +33,13 @@ const router = createRouter({
     routes
 })
 
+// Not sure if this is the best way to do a global auth guard
+// but it's the only one I can find that works with type script
+// and the composition api
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(r => r.meta?.requiresAuth)) {
-        if (firebase.auth().currentUser !== null) {
-            next()
-        } else {
-            next({ name: 'Login' })
-        }
+    const requiresAuth = to.matched.some(r => r.meta?.requiresAuth)
+    if (requiresAuth && !store.state.auth.user) {
+        router.push('/')
     } else {
         next()
     }

@@ -7,8 +7,9 @@
             <template #title> {{ data.movie.name }} </template>
             <template #content>
                 <div>
-                    <ProgressBar v-if="data.rating" :value="data.rating" :showValue="true" />
-                    <Button class="movie__seen-it" v-if="!data.rating" label="Seen It" />
+                    <ProgressBar class="movie__rating" v-if="data.myRating" :value="data.myRating" :showValue="true" title="My Rating" />
+                    <ProgressBar class="movie__rating" v-if="data.globalRating" :value="data.globalRating" :showValue="true" title="Global Rating" />
+                    <Button class="movie__seen-it" v-if="!data.myRating" label="Seen It" />
                 </div>
             </template>
             <template #footer>
@@ -56,12 +57,8 @@
         }
 
         &__rating {
-            transform: rotate(-90deg);
-            position: relative;
-            top: -7em;
-            display: flex;
-            left: -5em;
-            margin-bottom: -2em;
+            border-radius: 0;
+            background-color: var(--surface-card);
         }
     }
 </style>

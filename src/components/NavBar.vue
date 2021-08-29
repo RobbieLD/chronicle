@@ -12,11 +12,12 @@
     </div>
 </template>
 <script lang='ts'>
-    import { defineComponent, onBeforeUnmount, ref } from 'vue'
+    import { computed, defineComponent, ref } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
     import Button from 'primevue/button'
-    import firebase from 'firebase/app'
     import 'firebase/auth'
+    import { useStore } from 'vuex'
+    import { key } from '@/store'
     
     export default defineComponent({
         name: 'NavBar',
@@ -28,26 +29,17 @@
             const route = useRoute()
             const title = ref(route.name)
             const router = useRouter()
-            const userLoggedIn = ref(false)
+            const store = useStore(key)
+            const userLoggedIn = computed(() => store.state.auth.user !== null)
             
             const openMenu = () => {
                 emit('menuOpen')
             }
 
-            const logout = () => {
-                firebase.auth().signOut()
+            const logout = async () => {
+                await store.dispatch('auth/signOut')
                 router.push('/')
             }
-
-            const authListener = firebase
-                .auth()
-                .onAuthStateChanged((user) => {
-                    userLoggedIn.value = user !== null
-                })
-
-            onBeforeUnmount(() => {
-                authListener()
-            })
 
             return {
                 openMenu,

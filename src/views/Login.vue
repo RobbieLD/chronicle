@@ -39,14 +39,15 @@
     </Card>
 </template>
 <script lang='ts'>
-    import { defineComponent, ref } from 'vue'
+    import { defineComponent, ref, watch } from 'vue'
     import Card from 'primevue/card'
     import InputText from 'primevue/inputtext'
     import Password from 'primevue/password'
     import Button from 'primevue/button'
     import { useRouter } from 'vue-router'
-    import firebase from 'firebase/app'
     import Notify from '@/util/notify'
+    import { useStore } from 'vuex'
+    import { key } from '@/store'
 
     export default defineComponent({
         name: 'Login',
@@ -62,25 +63,25 @@
             const email = ref('me@robdavis.dev')
             const loggingIn = ref(false)
             const notify = new Notify()
-            const login = () => {
+            const store = useStore(key)
+            
+            const login = async () => {
                 loggingIn.value = true
-                firebase
-                    .auth()
-                    .signInWithEmailAndPassword(email.value, password.value)
-                    .catch((error) => {
-                        notify.show(error)
-                    })
-                    .finally(() => {
-                        loggingIn.value = false
-                    })
+                await store.dispatch('auth/signIn', { email: email.value, password: password.value })
+                loggingIn.value = false
             }
 
-            firebase.auth().onAuthStateChanged(user => {
-                if (user !== null) {
+            watch(() => store.state.auth.user, (user) => {
+                if (user) {
                     router.push('/movies')
                 }
             })
 
+            watch(() => store.state.auth.error, (error) => {
+                if (error) {
+                    notify.show(error)
+                }
+            })
 
             return {
                 password,

@@ -13,13 +13,15 @@
     <Toast position="top-right" />
 </template>
 <script lang="ts">
-    import { defineComponent, ref } from 'vue'
+    import { defineComponent, onMounted, ref } from 'vue'
     import NavBar from '@/components/NavBar.vue'
     import Sidebar from 'primevue/sidebar'
     import MainMenu from '@/components/MainMenu.vue'
     import Toast from 'primevue/toast'
     import AddButton from '@/components/AddButton.vue'
     import AddMovie from '@/components/AddMovie.vue'
+    import { useStore } from 'vuex'
+    import { key } from '@/store'
 
     export default defineComponent({
         name: 'App',
@@ -34,6 +36,7 @@
         setup() {
             const menuIsOpen = ref(false)
             const addIsOpen = ref(false)
+            const store = useStore(key)
 
             const openAddPanel = () => {
                 addIsOpen.value = true
@@ -50,6 +53,10 @@
             const closeMenu = () => {
                 menuIsOpen.value = false
             }
+
+            onMounted(() => {
+                store.dispatch('auth/authSubscribe')
+            })
 
             return {
                 menuIsOpen,

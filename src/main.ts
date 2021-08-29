@@ -4,6 +4,7 @@ import router from './router'
 import { store, key } from './store'
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
+import Tooltip from 'primevue/tooltip'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -20,4 +21,5 @@ createApp(App)
     .use(router)
     .use(PrimeVue)
     .use(ToastService)
+    .directive('tooltip', Tooltip)
     .mount('#app')

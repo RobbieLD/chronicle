@@ -1,5 +1,5 @@
-import UserState from './user.state';
+import AuthState from './auth.state';
 
 export default interface RootState {
-    user: UserState
+    auth: AuthState
 }

@@ -23,9 +23,11 @@ interface MovieImage {
 export default class MovieSuggestion {
     public name: string
     public poster: MovieImage
+    public rating: number
     constructor(result: Result, baseImageUrl: string, imageSizes: string[]) {
         const year = result.release_date.split('-')[0]
         this.name = `${result.title} (${year})`
+        this.rating = result.vote_average * 10
         this.poster = {
             url: `${baseImageUrl}/${imageSizes[2]}/${result.poster_path}`,
             width: Number.parseInt(imageSizes[2].split('w')[1])
