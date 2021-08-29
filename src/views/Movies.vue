@@ -7,11 +7,12 @@
             <template #title> {{ data.movie.name }} </template>
             <template #content>
                 <div>
-                    <ProgressBar :value="data.rating" :showValue="true" />
+                    <ProgressBar v-if="data.rating" :value="data.rating" :showValue="true" />
+                    <Button class="movie__seen-it" v-if="!data.rating" label="Seen It" />
                 </div>
             </template>
             <template #footer>
-                TODO
+                {{ data.year || '' }}
             </template>
         </Card>
     </div>
@@ -23,12 +24,14 @@
     import Card from 'primevue/card'
     import MovieData from '@/models/movie-search'
     import ProgressBar from 'primevue/progressbar'
+    import Button from 'primevue/button'
 
     export default defineComponent({
         name: 'Movies',
         components: {
             Card,
-            ProgressBar
+            ProgressBar,
+            Button
         },
         setup() {
             const movies = ref<MovieData>()
@@ -47,6 +50,10 @@
     .movie {
         width: 12em;
         margin: 0.5em;
+
+        &__seen-it {
+            width: 100%;
+        }
 
         &__rating {
             transform: rotate(-90deg);
