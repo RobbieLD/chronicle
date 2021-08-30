@@ -37,7 +37,8 @@ export default class MovieSuggestion {
 
 export interface MovieData {
     movie: MovieSuggestion,
-    rating: number,
+    myRating: number,
+    globalRating: number
     year: number
 }
 export default interface MovieSearchResult {

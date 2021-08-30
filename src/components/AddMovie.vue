@@ -65,7 +65,7 @@
             const searchReady = ref(false)
             const suggestions = ref<MovieSuggestion[]>([])
             const selectedMovie = ref<MovieSuggestion>()
-            const rating = ref<number>()
+            const rating = ref<number>(0)
             const selectedYear = ref<number>()
             const invalid = ref(false)
             const saving = ref(false)

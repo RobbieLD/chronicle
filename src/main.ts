@@ -7,6 +7,7 @@ import ToastService from 'primevue/toastservice'
 import Tooltip from 'primevue/tooltip'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/database'
 
 import 'primevue/resources/themes/saga-orange/theme.css'
 import 'primevue/resources/primevue.min.css'

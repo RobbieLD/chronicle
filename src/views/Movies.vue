@@ -1,15 +1,15 @@
 <template>
     <div class="col-fixed" v-for="(data, index) in movies" :key="index">
-        <Card class="movie">
+        <Card class="movie" v-show="data.movie">
             <template #header>
-                <img alt="Poster" :src="data.movie.poster.url" />
+                <img alt="Poster" :src="data.movie?.poster?.url" />
             </template>
-            <template #title> {{ data.movie.name }} </template>
+            <template #title> {{ data.movie?.name }} </template>
             <template #content>
                 <div>
                     <ProgressBar class="movie__rating" v-if="data.myRating" :value="data.myRating" :showValue="true" title="My Rating" />
                     <ProgressBar class="movie__rating" v-if="data.globalRating" :value="data.globalRating" :showValue="true" title="Global Rating" />
-                    <Button class="movie__seen-it" v-if="!data.myRating" label="Seen It" />
+                    <Button class="movie__seen-it" v-if="!data.year" label="Seen It" />
                 </div>
             </template>
             <template #footer>
@@ -19,13 +19,12 @@
     </div>
 </template>
 <script lang='ts'>
-    import { defineComponent, ref } from 'vue'
-    import firebase from 'firebase/app'
-    import 'firebase/database'
+    import { computed, defineComponent, onMounted } from 'vue'
     import Card from 'primevue/card'
-    import MovieData from '@/models/movie-search'
     import ProgressBar from 'primevue/progressbar'
     import Button from 'primevue/button'
+    import { useStore } from 'vuex'
+    import { key } from '@/store'
 
     export default defineComponent({
         name: 'Movies',
@@ -35,10 +34,11 @@
             Button
         },
         setup() {
-            const movies = ref<MovieData>()
-            const databaseRef = firebase.database().ref('/movies')
-            databaseRef.on('value', (snapshot) => {
-                movies.value = snapshot.val()
+            const store = useStore(key)
+            const movies = computed(() => store.getters['movies/getSeenMovies'])
+
+            onMounted(() => {
+                store.dispatch('movies/loadMovies')
             })
 
             return {
