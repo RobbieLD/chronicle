@@ -2,12 +2,14 @@ import { ActionContext, Module } from 'vuex'
 import RootState from '../states/root.state'
 import firebase from 'firebase/app'
 import MovieState from '../states/movies.state'
-import { MovieData } from '@/models/movie-search'
+import MovieSuggestion from '@/models/movie-search'
+import MovieService from '@/services/movie.service'
+import ItemData from '@/models/item'
 
 const path = '/movies'
 
 // Getters
-const getSeenMovies = (state: MovieState): MovieData[] => {
+const getSeenMovies = (state: MovieState): ItemData[] => {
     if (state.movies) {
         return Object.values(state.movies).filter(m => m.year)
     } else {
@@ -15,7 +17,7 @@ const getSeenMovies = (state: MovieState): MovieData[] => {
     }
 }
 
-const getUnseenMovies = (state: MovieState): MovieData[] => {
+const getUnseenMovies = (state: MovieState): ItemData[] => {
     if (state.movies) {
         return Object.values(state.movies).filter(m => !m.year)
     } else {
@@ -24,8 +26,16 @@ const getUnseenMovies = (state: MovieState): MovieData[] => {
 }
 
 // Mutations
-const setMovies = (state: MovieState, movies: Record<string, MovieData>): void => {
+const setMovies = (state: MovieState, movies: Record<string, ItemData>): void => {
     state.movies = movies
+}
+
+const setImageBaseUrl = (state: MovieState, url: string): void => {
+    state.imageBaseUrl = url
+}
+
+const setImageSizes = (state: MovieState, sizes: string[]): void => {
+    state.imageSizes = sizes
 }
 
 
@@ -37,21 +47,47 @@ const loadMovies = async ({ commit }: ActionContext<MovieState, RootState>): Pro
     })
 }
 
+const loadConfiguration = async ({ commit }: ActionContext<MovieState, RootState>): Promise<void> => {
+    const service = new MovieService()
+    const results = await service.Configuration()
+    commit('setImageBaseUrl', results.images.base_url)
+    commit('setImageSizes', results.images.poster_sizes)
+}
+
+const loadSuggestions = async ({ state }: ActionContext<MovieState, RootState>, query: string): Promise<MovieSuggestion[]> => {
+    const service = new MovieService()
+    const results = await service.Search(query)
+    // No need to store this as we're only using it for generating the drop down
+    return results.results.map<MovieSuggestion>((r) => new MovieSuggestion(r, state.imageBaseUrl, state.imageSizes))
+}
+
+const addMovie = async (_ : ActionContext<MovieState, RootState>, movie: ItemData): Promise<void> => {
+    const databaseRef = firebase.database().ref(path)
+    await databaseRef.push(movie)
+}
+
 const getters = {
     getSeenMovies,
     getUnseenMovies
 }
 
 const mutations = {
-    setMovies
+    setMovies,
+    setImageBaseUrl,
+    setImageSizes
 }
 
 const actions = {
-    loadMovies
+    loadMovies,
+    loadConfiguration,
+    loadSuggestions,
+    addMovie
 }
 
 const state: MovieState = {
-    movies: {}
+    movies: {},
+    imageBaseUrl: '',
+    imageSizes: []
 }
 
 const moviesModule: Module<MovieState, RootState> = {

@@ -36,18 +36,18 @@
     </div>
 </template>
 <script lang='ts'>
-    import { defineComponent, ref } from 'vue'
+    import { defineComponent, onMounted, ref } from 'vue'
     import AutoComplete from 'primevue/autocomplete'
-    import MovieService from '@/services/movie.service'
-    import MovieConfiguration from '@/models/movie-configuration'
     import AutoCompleteEvent from '@/models/prime-events'
     import MovieSuggestion from '@/models/movie-search'
     import Slider from 'primevue/slider'
     import Dropdown from 'primevue/dropdown'
     import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
-    import firebase from 'firebase/app'
+    import { useStore } from 'vuex'
+    import { key } from '@/store'
     import 'firebase/database'
+    import ItemData from '@/models/item'
 
     export default defineComponent({
         name: 'AddMovie',
@@ -59,9 +59,6 @@
         },
         emits: ['saved'],
         setup(props, { emit }) {
-            const service = new MovieService()
-            let imageBaseUrl = ''
-            let imageSizes: string[]
             const searchReady = ref(false)
             const suggestions = ref<MovieSuggestion[]>([])
             const selectedMovie = ref<MovieSuggestion>()
@@ -69,11 +66,10 @@
             const selectedYear = ref<number>()
             const invalid = ref(false)
             const saving = ref(false)
+            const store = useStore(key)
 
-            // We need to get the config values first
-            service.Configuration().then((config: MovieConfiguration) => {
-                imageBaseUrl = config.images.base_url
-                imageSizes = config.images.poster_sizes
+            onMounted(async () => {
+                await store.dispatch('movies/loadConfiguration')
                 searchReady.value = true
             })
 
@@ -84,28 +80,24 @@
                     return
                 }
 
-                saving.value = true
-                
-                const databaseRef = firebase.database().ref('/movies')
-
-                databaseRef.push({
-                    movie: selectedMovie.value,
+                const movie : ItemData = {
+                    name: selectedMovie.value?.name || '',
+                    posterUrl: selectedMovie.value?.poster?.url || '',
+                    poasterWidth: selectedMovie.value?.poster?.width || 0,
                     myRating: rating.value || 0,
                     globalRating: selectedMovie.value?.rating || 0,
                     year: selectedYear.value || 0
-                }).then(() => {
-                    emit('saved')
-                }).catch((e) => {
-                    console.error(e)
-                })
+                }
+
+                saving.value = true
+                await store.dispatch('movies/addMovie', movie)
+                emit('saved')
             }
 
             const movieSearch = async (event: AutoCompleteEvent) => {
-                const results = await service.Search(event.query.trim())
-                suggestions.value = results.results.map<MovieSuggestion>(
-                    (r) => new MovieSuggestion(r, imageBaseUrl, imageSizes)
-                )
+                suggestions.value = await store.dispatch('movies/loadSuggestions', event.query.trim())
             }
+
             return {
                 movieSearch,
                 searchReady,

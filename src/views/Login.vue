@@ -73,7 +73,7 @@
 
             watch(() => store.state.auth.user, (user) => {
                 if (user) {
-                    router.push('/movies')
+                    router.push('/movies-history')
                 }
             })
 

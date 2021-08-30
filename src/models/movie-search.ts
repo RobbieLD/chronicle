@@ -25,7 +25,12 @@ export default class MovieSuggestion {
     public poster: MovieImage
     public rating: number
     constructor(result: Result, baseImageUrl: string, imageSizes: string[]) {
-        const year = result.release_date.split('-')[0]
+        let year = '0'
+        
+        if (result.release_date) {
+            year = result.release_date?.split('-')[0]
+        }
+        
         this.name = `${result.title} (${year})`
         this.rating = result.vote_average * 10
         this.poster = {
@@ -35,12 +40,6 @@ export default class MovieSuggestion {
     }
 }
 
-export interface MovieData {
-    movie: MovieSuggestion,
-    myRating: number,
-    globalRating: number
-    year: number
-}
 export default interface MovieSearchResult {
     page: number;
     results: Result[];

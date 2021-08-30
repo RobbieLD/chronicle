@@ -11,9 +11,23 @@ const routes: Array<RouteRecordRaw> = [
         component: Login
     },
     {
-        path: '/movies',
-        name: 'Movies',
+        path: '/movies-history',
+        name: 'Movies History',
         component: Movies,
+        props: {
+            getter: 'getSeenMovies'
+        },
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/movies-watch-list',
+        name: 'Movies Watch List',
+        component: Movies,
+        props: {
+            getter: 'getUnseenMovies'
+        },
         meta: {
             requiresAuth: true
         }

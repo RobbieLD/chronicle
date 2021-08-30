@@ -7,9 +7,10 @@
     </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
     <div class="content grid">
-        <router-view />
+        <router-view :key="$route.fullPath" />
     </div>
     <add-button @clicked="openAddPanel"></add-button>
+    <div class="footer">Created by Rob Davis | Version 1.0</div>
     <Toast position="top-right" />
 </template>
 <script lang="ts">
@@ -79,6 +80,7 @@
         height: 100%;
         background-attachment: fixed;
         background-size: cover;
+        background-image: url('https://images.unsplash.com/photo-1549074862-6173e20d02a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2700&q=80');
     }
 
     #app {
@@ -93,13 +95,21 @@
     }
 
     .content {
-        // flex: 1 0 auto;
         padding: 0.5em;
-        // display: flex;
-        // flex-wrap: wrap;
     }
 
     .p-sidebar-content {
         height: 100%;
+    }
+
+    .footer {
+        color: var(--surface-0);
+        bottom: 0;
+        position: fixed;
+        padding: 0.5em;
+        display: flex;
+        flex-grow: 1;
+        align-items: flex-end;
+        font-size: 0.8em;
     }
 </style>

@@ -1,5 +1,7 @@
-import { MovieData } from '@/models/movie-search';
+import ItemData from '@/models/item';
 
 export default interface MovieState {
-    movies: Record<string, MovieData>
+    movies: Record<string, ItemData>,
+    imageBaseUrl: string,
+    imageSizes: string[]
 }

@@ -53,7 +53,8 @@
 </script>
 <style lang='scss' scoped>
     .nav {
-        background-color: var(--surface-300);
+        background-color: var(--surface-900);
+        color: var(--surface-0);
 
         &__burger {
             display: flex;
