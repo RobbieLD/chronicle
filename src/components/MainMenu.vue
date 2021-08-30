@@ -1,28 +1,33 @@
 <template>
+    <div class="menu-header">Movies</div>
     <router-link
         v-on:click="handleClick"
-        v-for="route in routes"
-        :key="route.path"
+        key="/movies/history"
         class="menu-item"
-        :to="route.path"
-        >{{ route.name }}
-    </router-link>
+        to="/movies/history"
+        >History</router-link
+    >
+    <router-link
+        v-on:click="handleClick"
+        key="/movies/watch"
+        class="menu-item"
+        to="/movies/watch"
+        >Watch List</router-link
+    >
 </template>
 <script lang='ts'>
-    import router from '@/router'
     import { defineComponent } from 'vue'
     export default defineComponent({
         name: 'MainMenu',
         components: {},
         emits: ['navigate'],
         setup(props, { emit }) {
-            const routes = router.options.routes.filter(r => r.meta?.requiresAuth)
             const handleClick = () => {
                 emit('navigate')
             }
+
             return {
-                routes,
-                handleClick
+                handleClick,
             }
         },
     })
@@ -32,16 +37,20 @@
         color: var(--primary-color) !important;
     }
 
-    .menu-item {
-        padding: 0.5em;
+
+    .menu-item, .menu-header {
+        padding-left: 0.5em;
+        padding-bottom: 0.3em;
         font-size: 2em;
         display: flex;
         align-items: center;
         justify-content: space-between;
         color: var(--surface-900);
         text-decoration: none;
-        padding: 0.5em;
+    }
 
+    .menu-item {
+        padding-left: 1em;
         &:hover {
             color: var(--primary-color);
         }
