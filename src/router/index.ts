@@ -3,6 +3,7 @@ import Login from '../views/Login.vue'
 import Movies from '../views/Movies.vue'
 import Musicals from '../views/Musicals.vue'
 import { store } from '@/store'
+import ItemsList from '@/components/ItemsList.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -11,26 +12,30 @@ const routes: Array<RouteRecordRaw> = [
         component: Login
     },
     {
-        path: '/movies-history',
-        name: 'Movies History',
+        path: '/movies/',
+        name: 'Movies',
         component: Movies,
-        props: {
-            getter: 'getSeenMovies'
-        },
         meta: {
             requiresAuth: true
-        }
-    },
-    {
-        path: '/movies-watch-list',
-        name: 'Movies Watch List',
-        component: Movies,
-        props: {
-            getter: 'getUnseenMovies'
         },
-        meta: {
-            requiresAuth: true
-        }
+        children: [
+            {
+                path:'history',
+                name: 'Movie History',
+                component: ItemsList,
+                props: {
+                    getter: 'getSeenMovies'
+                }
+            },
+            {
+                path: 'watch',
+                name: 'Movie Watch List',
+                component: ItemsList,
+                props: {
+                    getter: 'getUnseenMovies'
+                }
+            }
+        ]
     },
     {
         path: '/musicals',

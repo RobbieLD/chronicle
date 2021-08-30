@@ -1,35 +1,22 @@
 <template>
-    <items-list :items="movies"></items-list>
+    <router-view></router-view>
 </template>
 <script lang='ts'>
-    import { computed, defineComponent, onMounted } from 'vue'
+    import { defineComponent, inject, onMounted } from 'vue'
     import { useStore } from 'vuex'
-    import { key } from '@/store'
-    import ItemsList from '@/components/ItemsList.vue'
-    
+    import { moduleKey, storeKey } from '@/store'
+        
     export default defineComponent({
         name: 'Movies',
-        components: {
-            ItemsList,
-        },
-        props: {
-            getter: {
-                type: String,
-                required: true
-            }
-        },
-        setup(props) {
-            const store = useStore(key)
-            const movies = computed(() => store.getters[`movies/${props.getter}`])
-
-
+        components: {},
+        setup() {
+            const store = useStore(storeKey)
+            inject(moduleKey, 'movies')
             onMounted(() => {
                 store.dispatch('movies/loadMovies')
             })
 
-            return {
-                movies,
-            }
+            return {}
         },
     })
 </script>

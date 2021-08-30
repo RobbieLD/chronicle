@@ -47,7 +47,7 @@
     import { useRouter } from 'vue-router'
     import Notify from '@/util/notify'
     import { useStore } from 'vuex'
-    import { key } from '@/store'
+    import { storeKey } from '@/store'
 
     export default defineComponent({
         name: 'Login',
@@ -63,7 +63,7 @@
             const email = ref('me@robdavis.dev')
             const loggingIn = ref(false)
             const notify = new Notify()
-            const store = useStore(key)
+            const store = useStore(storeKey)
             
             const login = async () => {
                 loggingIn.value = true
@@ -73,7 +73,7 @@
 
             watch(() => store.state.auth.user, (user) => {
                 if (user) {
-                    router.push('/movies-history')
+                    router.push({ name: 'Movie History'})
                 }
             })
 

@@ -45,7 +45,7 @@
     import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
     import { useStore } from 'vuex'
-    import { key } from '@/store'
+    import { storeKey } from '@/store'
     import 'firebase/database'
     import ItemData from '@/models/item'
 
@@ -66,7 +66,7 @@
             const selectedYear = ref<number>()
             const invalid = ref(false)
             const saving = ref(false)
-            const store = useStore(key)
+            const store = useStore(storeKey)
 
             onMounted(async () => {
                 await store.dispatch('movies/loadConfiguration')

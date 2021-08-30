@@ -17,7 +17,7 @@
     import Button from 'primevue/button'
     import 'firebase/auth'
     import { useStore } from 'vuex'
-    import { key } from '@/store'
+    import { storeKey } from '@/store'
     
     export default defineComponent({
         name: 'NavBar',
@@ -29,7 +29,7 @@
             const route = useRoute()
             const title = ref(route.name)
             const router = useRouter()
-            const store = useStore(key)
+            const store = useStore(storeKey)
             const userLoggedIn = computed(() => store.state.auth.user !== null)
             
             const openMenu = () => {

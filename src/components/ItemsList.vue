@@ -35,12 +35,13 @@
     </div>
 </template>
 <script lang='ts'>
-    import { defineComponent, PropType } from 'vue'
+    import { computed, defineComponent, inject } from 'vue'
     import ProgressBar from 'primevue/progressbar'
     import Button from 'primevue/button'
     import Card from 'primevue/card'
-    import ItemData from '@/models/item'
-
+    import { useStore } from 'vuex'
+    import { moduleKey, storeKey } from '@/store'
+    
     export default defineComponent({
         name: 'ItemsList',
         components: {
@@ -49,13 +50,20 @@
             Card
         },
         props: {
-            items: {
-                type: Object as PropType<ItemData>,
+            getter: {
+                type: String,
                 required: true
             }
         },
-        setup() {
-            return {}
+        setup(props) {
+            const module = inject(moduleKey)
+            const store = useStore(storeKey)
+            // This might be being too clever but there's several ways of doing this.
+            const items = computed(() => store.getters[`${module}/${props.getter}`])
+
+            return {
+                items
+            }
         },
     })
 </script>
@@ -74,3 +82,4 @@
         }
     }
 </style>
+

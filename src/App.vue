@@ -22,7 +22,7 @@
     import AddButton from '@/components/AddButton.vue'
     import AddMovie from '@/components/AddMovie.vue'
     import { useStore } from 'vuex'
-    import { key } from '@/store'
+    import { storeKey } from '@/store'
 
     export default defineComponent({
         name: 'App',
@@ -37,7 +37,7 @@
         setup() {
             const menuIsOpen = ref(false)
             const addIsOpen = ref(false)
-            const store = useStore(key)
+            const store = useStore(storeKey)
 
             const openAddPanel = () => {
                 addIsOpen.value = true
