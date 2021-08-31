@@ -54,7 +54,7 @@
     </Card>
 </template>
 <script lang='ts'>
-    import { defineComponent, PropType, ref } from 'vue'
+    import { defineComponent, inject, PropType, provide, ref } from 'vue'
     import ProgressBar from 'primevue/progressbar'
     import Card from 'primevue/card'
     import Dropdown from 'primevue/dropdown'
@@ -62,6 +62,8 @@
     import ChronicleConfig from '@/config'
     import Slider from 'primevue/slider'
     import Button from 'primevue/button'
+    import { useStore } from 'vuex'
+    import { moduleKey, storeKey } from '@/store'
 
     export default defineComponent({
         name: 'Item',
@@ -83,13 +85,24 @@
                 required: true,
             },
         },
-        setup() {
+        setup(props) {
             const isEditing = ref(false)
             const selectedYear = ref<number>(new Date().getUTCFullYear())
             const rating = ref<number>(0)
+            const store = useStore(storeKey)
+            const module = inject(moduleKey)
 
-            const edit = () => {
-                isEditing.value = !isEditing.value
+            const edit = async () => {
+                if (!isEditing.value) {
+                    isEditing.value = true
+                } else {
+                    // Save
+                    const item = { ...props.data }
+                    item.myRating = rating.value
+                    item.year = selectedYear.value
+                    await store.dispatch(`${module}/update`, { item, key: props.editKey })
+                    isEditing.value = false
+                }
             }
 
             return {

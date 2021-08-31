@@ -79,6 +79,12 @@ const addMovie = async (_: ActionContext<MovieState, RootState>, movie: ItemData
     await databaseRef.push(movie)
 }
 
+const update = async ({ state }: ActionContext<MovieState, RootState>, request: { item: ItemData, key: string }): Promise<void> => {
+    const databaseRef = firebase.database().ref(path)
+    state.movies[request.key] = request.item
+    await databaseRef.update(state.movies)
+}
+
 const getters = {
     getSeenMovies,
     getUnseenMovies
@@ -94,7 +100,8 @@ const actions = {
     loadMovies,
     loadConfiguration,
     loadSuggestions,
-    addMovie
+    addMovie,
+    update
 }
 
 const state: MovieState = {
