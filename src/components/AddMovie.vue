@@ -57,6 +57,12 @@
             Dropdown,
             Button
         },
+        props: {
+            movieKey: {
+                type: String,
+                required: false
+            }
+        },
         emits: ['saved'],
         setup(props, { emit }) {
             const searchReady = ref(false)

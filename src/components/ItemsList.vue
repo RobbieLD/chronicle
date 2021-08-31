@@ -1,5 +1,5 @@
 <template>
-    <div class="col-fixed" v-for="(data, index) in items" :key="index">
+    <div class="col-fixed" v-for="(data, key) in items" :key="key">
         <Card class="item">
             <template #header>
                 <img alt="Poster" :src="data.posterUrl" />
@@ -25,6 +25,7 @@
                         class="item__seen-it"
                         v-if="!data.year"
                         label="Seen It"
+                        @click="edit(key)"
                     />
                 </div>
             </template>
@@ -55,14 +56,21 @@
                 required: true
             }
         },
-        setup(props) {
+        emits: ['edit'],
+        setup(props, { emit }) {
             const module = inject(moduleKey)
             const store = useStore(storeKey)
             // This might be being too clever but there's several ways of doing this.
             const items = computed(() => store.getters[`${module}/${props.getter}`])
 
+            const edit = (key: string) => {
+                //emit('edit', key)
+                console.log(key)
+            }
+
             return {
-                items
+                items,
+                edit
             }
         },
     })

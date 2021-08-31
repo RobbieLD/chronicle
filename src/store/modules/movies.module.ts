@@ -8,22 +8,35 @@ import ItemData from '@/models/item'
 
 const path = '/movies'
 
+// Helpers
+const filtered = (state: MovieState, test: (item: ItemData) => boolean) => {
+    return Object.keys(state.movies)
+        .filter(key => test(state.movies[key]))
+        .reduce((obj, key) => {
+            return {
+                ...obj,
+                [key]: state.movies[key]
+            }
+        }, {})
+}
+
 // Getters
-const getSeenMovies = (state: MovieState): ItemData[] => {
+const getSeenMovies = (state: MovieState): Record<string, ItemData> => {
     if (state.movies) {
-        return Object.values(state.movies).filter(m => m.year)
+        return filtered(state, (item) => item.year > 0)
     } else {
-        return []
+        return {}
     }
 }
 
-const getUnseenMovies = (state: MovieState): ItemData[] => {
+const getUnseenMovies = (state: MovieState): Record<string, ItemData> => {
     if (state.movies) {
-        return Object.values(state.movies).filter(m => !m.year)
+        return filtered(state, (item) => item.year === 0)
     } else {
-        return []
+        return {}
     }
 }
+
 
 // Mutations
 const setMovies = (state: MovieState, movies: Record<string, ItemData>): void => {
@@ -61,7 +74,7 @@ const loadSuggestions = async ({ state }: ActionContext<MovieState, RootState>, 
     return results.results.map<MovieSuggestion>((r) => new MovieSuggestion(r, state.imageBaseUrl, state.imageSizes))
 }
 
-const addMovie = async (_ : ActionContext<MovieState, RootState>, movie: ItemData): Promise<void> => {
+const addMovie = async (_: ActionContext<MovieState, RootState>, movie: ItemData): Promise<void> => {
     const databaseRef = firebase.database().ref(path)
     await databaseRef.push(movie)
 }
@@ -87,7 +100,8 @@ const actions = {
 const state: MovieState = {
     movies: {},
     imageBaseUrl: '',
-    imageSizes: []
+    imageSizes: [],
+    editKey: ''
 }
 
 const moviesModule: Module<MovieState, RootState> = {
