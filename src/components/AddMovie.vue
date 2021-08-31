@@ -22,15 +22,32 @@
                 </AutoComplete>
             </div>
             <div class="p-field add-movie__row add-movie__poster">
-                <Slider v-model="rating" class="add-movie__rating" orientation="vertical" />
-                <img class="add-movie__poster" :src="selectedMovie?.poster?.url" :width="selectedMovie?.poster?.width"/>
+                <Slider
+                    v-model="rating"
+                    class="add-movie__rating"
+                    orientation="vertical"
+                />
+                <img
+                    :src="selectedMovie?.poster?.url"
+                    :width="selectedMovie?.poster?.width"
+                />
             </div>
             <div class="p-field add-movie__row">
                 <label for="year">Year Seen / Rating: {{ rating }}</label>
-                <Dropdown class="add-movie__field" id="year" v-model="selectedYear" :options="years" placeholder="Select a year" />
+                <Dropdown
+                    class="add-movie__field"
+                    id="year"
+                    v-model="selectedYear"
+                    :options="years"
+                    placeholder="Select a year"
+                />
             </div>
             <div class="p-field add-movie__row">
-                <Button :label="saving ? 'Saving' : 'Save'" @click="save" :disabled="saving" />
+                <Button
+                    :label="saving ? 'Saving' : 'Save'"
+                    @click="save"
+                    :disabled="saving"
+                />
             </div>
         </div>
     </div>
@@ -55,13 +72,7 @@
             AutoComplete,
             Slider,
             Dropdown,
-            Button
-        },
-        props: {
-            movieKey: {
-                type: String,
-                required: false
-            }
+            Button,
         },
         emits: ['saved'],
         setup(props, { emit }) {
@@ -86,13 +97,13 @@
                     return
                 }
 
-                const movie : ItemData = {
+                const movie: ItemData = {
                     name: selectedMovie.value?.name || '',
                     posterUrl: selectedMovie.value?.poster?.url || '',
                     poasterWidth: selectedMovie.value?.poster?.width || 0,
                     myRating: rating.value || 0,
                     globalRating: selectedMovie.value?.rating || 0,
-                    year: selectedYear.value || 0
+                    year: selectedYear.value || 0,
                 }
 
                 saving.value = true
@@ -101,7 +112,10 @@
             }
 
             const movieSearch = async (event: AutoCompleteEvent) => {
-                suggestions.value = await store.dispatch('movies/loadSuggestions', event.query.trim())
+                suggestions.value = await store.dispatch(
+                    'movies/loadSuggestions',
+                    event.query.trim()
+                )
             }
 
             return {
@@ -114,14 +128,13 @@
                 years: ChronicleConfig.Years(),
                 save,
                 invalid,
-                saving
+                saving,
             }
         },
     })
 </script>
 <style lang='scss' scoped>
     .add-movie {
-
         display: flex;
         flex-direction: column;
         align-items: center;

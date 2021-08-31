@@ -100,8 +100,7 @@ const actions = {
 const state: MovieState = {
     movies: {},
     imageBaseUrl: '',
-    imageSizes: [],
-    editKey: ''
+    imageSizes: []
 }
 
 const moviesModule: Module<MovieState, RootState> = {
