@@ -22,13 +22,25 @@
                     </template>
                 </AutoComplete>
             </div>
-            <div class="p-field add-musical__row" v-html="selectedMusical?.description" v-show="itemSelected"></div>
-            <div class="p-field add-musical__row add-musical__poster" v-show="itemSelected">
+            <div
+                class="p-field add-musical__row"
+                v-html="selectedMusical?.description"
+                v-show="itemSelected"
+            ></div>
+            <div
+                class="p-field add-musical__row add-musical__poster"
+                v-show="itemSelected"
+            >
                 <img :src="poster?.source" class="add-musical__image" />
             </div>
             <div class="p-field add-musical__row" v-show="itemSelected">
                 <label for="rating">Rating</label>
-                <Knob v-model="rating" id="rating" :size="150" class="add-musical__rating" />
+                <Knob
+                    v-model="rating"
+                    id="rating"
+                    :size="150"
+                    class="add-musical__rating"
+                />
             </div>
             <div class="p-field add-musical__row" v-show="itemSelected">
                 <label for="year">Year Seen</label>
@@ -53,7 +65,7 @@
 <script lang='ts'>
     import { defineComponent, ref } from 'vue'
     import AutoComplete from 'primevue/autocomplete'
-    import AutoCompleteEvent, { AutoCompleteEventSelectedEvent } from '@/models/prime-events'
+    import AutoCompleteEvent, { AutoCompleteEventSelectedEvent, } from '@/models/prime-events'
     import Dropdown from 'primevue/dropdown'
     import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
@@ -87,7 +99,10 @@
 
             const musicalSelected = async (event: AutoCompleteEventSelectedEvent<MusicalSuggestion>) => {
                 itemSelected.value = true
-                poster.value = await store.dispatch('musicals/loadPoster', event.value.title)
+                poster.value = await store.dispatch(
+                    'musicals/loadPoster',
+                    event.value.title
+                )
             }
 
             const musicalCleared = () => {
@@ -135,7 +150,7 @@
                 poster,
                 musicalSelected,
                 itemSelected,
-                musicalCleared
+                musicalCleared,
             }
         },
     })
