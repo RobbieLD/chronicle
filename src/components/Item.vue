@@ -27,7 +27,7 @@
                 />
                 <ProgressBar
                     class="item__rating"
-                    v-if="data.myRating"
+                    v-if="data.myRating && data.globalRating"
                     :value="data.globalRating"
                     :showValue="true"
                     title="Global Rating"
@@ -54,7 +54,7 @@
     </Card>
 </template>
 <script lang='ts'>
-    import { defineComponent, inject, PropType, provide, ref } from 'vue'
+    import { defineComponent, inject, PropType, ref } from 'vue'
     import ProgressBar from 'primevue/progressbar'
     import Card from 'primevue/card'
     import Dropdown from 'primevue/dropdown'

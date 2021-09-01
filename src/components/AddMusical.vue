@@ -63,6 +63,7 @@
     import { Thumbnail } from '@/models/musical-poster'
     import MusicalSuggestion from '@/models/musical-search'
     import Knob from 'primevue/knob'
+    import ItemData from '@/models/item'
 
     export default defineComponent({
         name: 'AddMusical',
@@ -100,17 +101,17 @@
                     return
                 }
 
-                // const movie: ItemData = {
-                //     name: selectedMovie.value?.name || '',
-                //     posterUrl: selectedMovie.value?.poster?.url || '',
-                //     poasterWidth: selectedMovie.value?.poster?.width || 0,
-                //     myRating: rating.value || 0,
-                //     globalRating: selectedMovie.value?.rating || 0,
-                //     year: selectedYear.value || 0,
-                // }
+                const musical: ItemData = {
+                    name: selectedMusical.value?.title || '',
+                    posterUrl: poster.value?.source || '',
+                    poasterWidth: poster.value?.width || 0,
+                    myRating: rating.value || 0,
+                    globalRating: 0,
+                    year: selectedYear.value || 0,
+                }
 
-                //saving.value = true
-                //await store.dispatch('movies/addMovie', movie)
+                saving.value = true
+                await store.dispatch('musicals/addMusical', musical)
                 emit('saved')
             }
 

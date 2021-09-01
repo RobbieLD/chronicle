@@ -38,12 +38,30 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
-        path: '/musicals',
+        path: '/musicals/',
         name: 'Musicals',
         component: Musicals,
         meta: {
             requiresAuth: true
-        }
+        },
+        children: [
+            {
+                path: 'history',
+                name: 'Musical History',
+                component: ItemsList,
+                props: {
+                    getter: 'getSeenMusicals'
+                }
+            },
+            {
+                path: 'listen',
+                name: 'Musical Listen List',
+                component: ItemsList,
+                props: {
+                    getter: 'getUnseenMusicals'
+                }
+            },
+        ]
     }
 ]
 

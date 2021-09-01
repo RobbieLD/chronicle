@@ -14,12 +14,20 @@
         to="/movies/watch"
         >Watch List</router-link
     >
+    <div class="menu-header">Musicals</div>
     <router-link
         v-on:click="handleClick"
-        key="/musicals"
+        key="/musicals/history"
         class="menu-item"
-        to="/musicals"
-        >Musicals</router-link
+        to="/musicals/history"
+        >History</router-link
+    >
+    <router-link
+        v-on:click="handleClick"
+        key="/musicals/listen"
+        class="menu-item"
+        to="/musicals/listen"
+        >Listen List</router-link
     >
 </template>
 <script lang='ts'>
@@ -54,6 +62,11 @@
         justify-content: space-between;
         color: var(--surface-900);
         text-decoration: none;
+    }
+
+    .menu-header {
+        margin-top: 1em;
+        font-weight: bold;
     }
 
     .menu-item {
