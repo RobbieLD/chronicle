@@ -14,6 +14,13 @@
         to="/movies/watch"
         >Watch List</router-link
     >
+    <router-link
+        v-on:click="handleClick"
+        key="/musicals"
+        class="menu-item"
+        to="/musicals"
+        >Musicals</router-link
+    >
 </template>
 <script lang='ts'>
     import { defineComponent } from 'vue'

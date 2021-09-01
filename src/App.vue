@@ -2,9 +2,6 @@
     <Sidebar v-model:visible="menuIsOpen">
         <main-menu @navigate="closeMenu"></main-menu>
     </Sidebar>
-    <Sidebar v-model:visible="addIsOpen" position="full">
-        <add-movie @saved="closeAddPanel"></add-movie>
-    </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
     <div class="content grid">
         <router-view :key="$route.fullPath" />
@@ -20,7 +17,6 @@
     import MainMenu from '@/components/MainMenu.vue'
     import Toast from 'primevue/toast'
     import AddButton from '@/components/AddButton.vue'
-    import AddMovie from '@/components/AddMovie.vue'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
 
@@ -32,19 +28,13 @@
             MainMenu,
             Toast,
             AddButton,
-            AddMovie,
         },
         setup() {
             const menuIsOpen = ref(false)
-            const addIsOpen = ref(false)
             const store = useStore(storeKey)
 
             const openAddPanel = () => {
-                addIsOpen.value = true
-            }
-
-            const closeAddPanel = () => {
-                addIsOpen.value = false
+                store.commit('ui/setAddPanelOpen', true)
             }
 
             const openMenu = () => {
@@ -61,11 +51,9 @@
 
             return {
                 menuIsOpen,
-                addIsOpen,
                 openMenu,
                 closeMenu,
                 openAddPanel,
-                closeAddPanel
             }
         },
     })

@@ -8,8 +8,8 @@ export default abstract class BaseService {
         this.http = axios.create({
             baseURL: baseUrl,
             headers: {
-                'Content-type': 'application/json'
-            }
+                'Content-type': 'application/json; charset=UTF-8',
+            },
         })
 
         // Hook up the error handler

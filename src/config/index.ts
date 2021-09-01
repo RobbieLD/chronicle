@@ -1,5 +1,6 @@
 export default class ChronicleConfig {
     public static ToastLifeSpan = 5000
+    public static PosterHeight = 400
     
     public static Years() : number[] {
         let currentYear = new Date().getUTCFullYear()
