@@ -2,16 +2,9 @@
     <Card class="item">
         <template #header>
             <div class="item__header">
-                <Slider
-                    class="item__rating-slider"
-                    v-model="rating"
-                    orientation="vertical"
-                    v-if="isEditing"
-                />
                 <img
                     alt="Poster"
                     :src="data.posterUrl"
-                    :class="isEditing ? 'item__poster--edit' : ''"
                 />
             </div>
         </template>
@@ -33,10 +26,17 @@
                     title="Global Rating"
                 />
 
+                <Knob
+                    v-model="rating"
+                    v-if="isEditing"
+                    :size="150"
+                    class="item_rating"
+                />
+
                 <Button
                     class="item__edit"
                     v-if="!data.year"
-                    :label="isEditing ? `Save Rating: ${rating}` : 'Edit'"
+                    :label="isEditing ? 'Save' : 'Edit'"
                     @click="edit"
                 ></Button>
                 <Dropdown
@@ -55,24 +55,24 @@
 </template>
 <script lang='ts'>
     import { defineComponent, inject, PropType, ref } from 'vue'
-    import ProgressBar from 'primevue/progressbar'
     import Card from 'primevue/card'
     import Dropdown from 'primevue/dropdown'
     import ItemData from '@/models/item'
     import ChronicleConfig from '@/config'
-    import Slider from 'primevue/slider'
     import Button from 'primevue/button'
     import { useStore } from 'vuex'
     import { moduleKey, storeKey } from '@/store'
+    import Knob from 'primevue/knob'
+    import ProgressBar from 'primevue/progressbar'
 
     export default defineComponent({
         name: 'Item',
         components: {
-            ProgressBar,
+            Knob,
             Button,
             Card,
             Dropdown,
-            Slider,
+            ProgressBar
         },
         props: {
             data: {
@@ -122,12 +122,6 @@
 
         &__rating-slider {
             height: 18em;
-        }
-
-        &__poster {
-            &--edit {
-                margin-left: -0.3em;
-            }
         }
 
         &__header {
