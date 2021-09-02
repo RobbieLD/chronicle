@@ -7,7 +7,7 @@
         <router-view :key="$route.fullPath" />
     </div>
     <add-button @clicked="openAddPanel"></add-button>
-    <div class="footer">Created by Rob Davis | Version 1.0</div>
+    <div class="footer">Created by Rob Davis | {{ sha }}</div>
     <Toast position="top-right" />
 </template>
 <script lang="ts">
@@ -54,6 +54,7 @@
                 openMenu,
                 closeMenu,
                 openAddPanel,
+                sha: process.env?.VUE_APP_COMMIT
             }
         },
     })

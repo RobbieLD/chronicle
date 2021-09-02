@@ -59,8 +59,8 @@
         },
         setup() {
             const router = useRouter()
-            const password = ref('password')
-            const email = ref('me@robdavis.dev')
+            const password = ref('')
+            const email = ref('')
             const loggingIn = ref(false)
             const notify = new Notify()
             const store = useStore(storeKey)
