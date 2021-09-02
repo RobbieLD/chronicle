@@ -14,13 +14,13 @@ export default class ChronicleConfig {
         return years
     }
 
-    public static MovieDbKey = '80f4a53c03c03a82e7a89241913c9843'
+    public static MovieDbKey = process.env?.VUE_APP_MOVIE_DB_KEY
     public static FirebaseConfig: Record<string, string> = {
-        apiKey: 'AIzaSyBp3gPT_5OI-R8qNDrBuAkwTKO9D8zXIMc',
-        authDomain: 'chronicle-39ac8.firebaseapp.com',
-        projectId: 'chronicle-39ac8',
-        storageBucket: 'chronicle-39ac8.appspot.com',
-        messagingSenderId: '112172843873',
-        appId: '1:112172843873:web:772af33f9471fb088f3b20'
+        apiKey: process.env?.VUE_APP_FIREBASE_API_KEY,
+        authDomain: process.env?.VUE_APP_FIREBASE_AUTH_DOMAIN,
+        projectId: process.env?.VUE_APP_FIREBASE_PROJECT_ID,
+        storageBucket: process.env?.VUE_APP_FIREBASE_STOREAGE_BUCKET,
+        messagingSenderId: process.env?.VUE_APP_FIREBASE_MESSAGE_SENDER_ID,
+        appId: process.env?.VUE_APP_FIREBASE_APP_ID
     }
 }
