@@ -1,5 +1,3 @@
-import ItemData from '@/models/item';
-
-export default interface MusicalState {
-    musicals: Record<string, ItemData>,
+import BaseState from './base.state';
+export default interface MusicalState extends BaseState{
 }

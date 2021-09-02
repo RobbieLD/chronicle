@@ -100,7 +100,7 @@
                     const item = { ...props.data }
                     item.myRating = rating.value
                     item.year = selectedYear.value
-                    await store.dispatch(`${module}/update`, { item, key: props.editKey })
+                    await store.dispatch(`${module}/updateItem`, { item, key: props.editKey })
                     isEditing.value = false
                 }
             }

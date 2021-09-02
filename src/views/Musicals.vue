@@ -23,7 +23,7 @@
             const store = useStore(storeKey)
 
             onMounted(() => {
-                store.dispatch('musicals/loadMusicals')
+                store.dispatch('musicals/loadItems')
             })
 
 

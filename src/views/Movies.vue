@@ -22,7 +22,7 @@
             provide(moduleKey, 'movies')
             const addIsOpen = ref(false)
             onMounted(() => {
-                store.dispatch('movies/loadMovies')
+                store.dispatch('movies/loadItems')
             })
 
             const setPanelClosedInStore = () => {

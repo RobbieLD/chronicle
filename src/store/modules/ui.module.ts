@@ -1,32 +1,31 @@
-import { Module } from 'vuex'
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import RootState from '../states/root.state'
 import UIState from '../states/ui.state'
 
-// Mutations
-const setAddPanelOpen = (state: UIState, open: boolean): void => {
-    state.addPanelOpen = open
+export default class UIModule implements Module<UIState, RootState> {    
+
+    public state(): UIState {
+        return {
+            addPanelOpen: false
+        }
+    }
+
+    public namespaced?: boolean = true
+
+    public getters: GetterTree<UIState, RootState> = {
+        
+    }
+
+    public mutations: MutationTree<UIState> = {
+        setAddPanelOpen: this.setAddPanelOpen
+    }
+
+    public actions: ActionTree<UIState, RootState> = {
+        
+    }
+
+    // Mutations
+    private setAddPanelOpen (state: UIState, open: boolean): void {
+        state.addPanelOpen = open
+    }
 }
-
-// Actions
-
-const getters = {}
-
-const mutations = {
-    setAddPanelOpen
-}
-
-const actions = {}
-
-const state: UIState = {
-    addPanelOpen: false
-}
-
-const uiModule: Module<UIState, RootState> = {
-    state,
-    getters,
-    mutations,
-    actions,
-    namespaced: true
-}
-
-export default uiModule

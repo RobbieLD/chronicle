@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Movie History',
                 component: ItemsList,
                 props: {
-                    getter: 'getSeenMovies'
+                    getter: 'getRatedItems'
                 }
             },
             {
@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Movie Watch List',
                 component: ItemsList,
                 props: {
-                    getter: 'getUnseenMovies'
+                    getter: 'getUnratedItems'
                 }
             }
         ]
@@ -50,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Musical History',
                 component: ItemsList,
                 props: {
-                    getter: 'getSeenMusicals'
+                    getter: 'getRatedItems'
                 }
             },
             {
@@ -58,7 +58,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Musical Listen List',
                 component: ItemsList,
                 props: {
-                    getter: 'getUnseenMusicals'
+                    getter: 'getUnratedItems'
                 }
             },
         ]

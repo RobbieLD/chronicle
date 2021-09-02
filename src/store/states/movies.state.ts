@@ -1,7 +1,6 @@
-import ItemData from '@/models/item';
+import BaseState from './base.state';
 
-export default interface MovieState {
-    movies: Record<string, ItemData>,
+export default interface MovieState extends BaseState {
     imageBaseUrl: string,
     imageSizes: string[]
 }

@@ -123,7 +123,7 @@
                 }
 
                 saving.value = true
-                await store.dispatch('movies/addMovie', movie)
+                await store.dispatch('movies/addItem', movie)
                 emit('saved')
             }
 

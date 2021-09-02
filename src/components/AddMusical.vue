@@ -126,7 +126,7 @@
                 }
 
                 saving.value = true
-                await store.dispatch('musicals/addMusical', musical)
+                await store.dispatch('musicals/addItem', musical)
                 emit('saved')
             }
 
