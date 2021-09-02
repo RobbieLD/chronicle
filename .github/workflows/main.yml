@@ -29,6 +29,9 @@ jobs:
           VUE_APP_FIREBASE_STOREAGE_BUCKET: ${{ secrets.FIREBASE_STOREAGE_BUCKET }}
           VUE_APP_FIREBASE_MESSAGE_SENDER_ID: ${{ secrets.FIREBASE_MESSAGE_SENDER_ID }}
           VUE_APP_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      
+      - name: Domain
+        run: echo 'chronicle.robdavis.dev' > dist/CNAME
 
       - name: Push
         uses: s0/git-publish-subdir-action@develop
