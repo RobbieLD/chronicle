@@ -37,7 +37,7 @@ export default class MovieModule extends BaseModule<MovieState> {
     private async loadConfiguration({ commit }: ActionContext<MovieState, RootState>): Promise<void> {
         const service = new MovieService()
         const results = await service.Configuration()
-        commit('setImageBaseUrl', results.images.base_url)
+        commit('setImageBaseUrl', results.images.secure_base_url)
         commit('setImageSizes', results.images.poster_sizes)
     }
 

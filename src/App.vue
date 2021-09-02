@@ -94,7 +94,6 @@
     .footer {
         color: var(--surface-0);
         bottom: 0;
-        position: fixed;
         padding: 0.5em;
         display: flex;
         flex-grow: 1;
