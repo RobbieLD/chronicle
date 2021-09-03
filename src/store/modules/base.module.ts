@@ -75,6 +75,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 const filtered = <T extends BaseState>(state: T, test: (item: ItemData) => boolean) => {
     return Object.keys(state.items)
         .filter(key => test(state.items[key]))
+        .sort((fKey, sKey) => state.items[sKey].year - state.items[fKey].year)
         .reduce((obj, key) => {
             return {
                 ...obj,

@@ -1,5 +1,5 @@
 <template>
-    <Card class="item">
+    <Card class="item" :data-key="editKey">
         <template #header>
             <div class="item__header">
                 <img

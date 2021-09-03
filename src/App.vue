@@ -85,6 +85,7 @@
 
     .content {
         padding: 0.5em;
+        justify-content: center;
     }
 
     .p-sidebar-content {
