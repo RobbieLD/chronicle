@@ -6,7 +6,7 @@ export default class ChronicleConfig {
         let currentYear = new Date().getUTCFullYear()
         const years = []
         
-        while(currentYear > 2014) {
+        while(currentYear > 1995) {
             years.push(currentYear)
             currentYear--
         }
