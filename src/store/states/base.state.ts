@@ -10,6 +10,11 @@ export interface ItemStats {
     module: string
 }
 
+export interface GraphData {
+    data: { x:number, y:string}[],
+    labels: string[]
+}
+
 export default interface BaseState {
     items: Record<string, ItemData>,
     dataPath: string

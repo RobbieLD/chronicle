@@ -3,7 +3,7 @@ import { checkCompatEnabled } from '@vue/compiler-core'
 import firebase from 'firebase/app'
 import { mixins } from 'vue-class-component'
 import { ActionContext, ActionTree, GetterTree, Module, MutationTree } from 'vuex'
-import BaseState, { ItemStats } from '../states/base.state'
+import BaseState, { GraphData, ItemStats } from '../states/base.state'
 import RootState from '../states/root.state'
 
 // Note because of the way the vuex store works I can't find a way to have instance variables
@@ -12,12 +12,15 @@ import RootState from '../states/root.state'
 export default abstract class BaseModule<T extends BaseState> implements Module<T, RootState> {
     public namespaced?: boolean = true
 
+    private isLoaded = false
+
     public abstract state(): T
 
     public getters: GetterTree<T, RootState> = {
         getRatedItems: this.getRatedItems,
         getUnratedItems: this.getUnratedItems,
-        getStats: this.getStats
+        getStats: this.getStats,
+        getGraphData: this.getGraphData
     }
 
 
@@ -45,6 +48,43 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
             return filtered(state, (item) => item.year === 0)
         } else {
             return {}
+        }
+    }
+
+    private getGraphData(state: T): GraphData {
+        const items = Object.values(state.items)
+
+        const groupBy = (array: ItemData[], keyFn: (item: ItemData) => string | number) => {
+            return array.reduce((result: Record<string | number, ItemData[]>, currentValue: ItemData) => {
+                const key = keyFn(currentValue)
+                if (result[key]) {
+                    result[key].push(currentValue)
+                }
+                else {
+                    result[key] = [currentValue]
+                }
+
+                return result
+            },{})
+        }
+
+        const groups = groupBy(items, i => i.year)
+        const labels = []
+        const data = []
+
+        for(const groupKey of Object.keys(groups)) {
+            if (groupKey > '0') {
+                labels.push(groupKey)
+                data.push({
+                    x: groups[groupKey].length,
+                    y: groupKey
+                })
+            }
+        }
+
+        return {
+            data,
+            labels
         }
     }
 
@@ -101,10 +141,13 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 
     // Actions
     private async loadItems({ state, commit }: ActionContext<T, RootState>): Promise<void> {
-        const databaseRef = firebase.database().ref(state.dataPath)
-        databaseRef.on('value', (snapshot) => {
-            commit('setItems', snapshot.val())
-        })
+        // No need to subscribe again
+        if (!Object.keys(state.items).length) {
+            const databaseRef = firebase.database().ref(state.dataPath)
+            databaseRef.on('value', (snapshot) => {
+                commit('setItems', snapshot.val())
+            })        
+        }
     }
 
     private async addItem({ state }: ActionContext<T, RootState>, movie: ItemData): Promise<void> {
