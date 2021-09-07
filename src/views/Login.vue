@@ -39,7 +39,7 @@
     </Card>
 </template>
 <script lang='ts'>
-    import { defineComponent, onMounted, ref, watch } from 'vue'
+    import { defineComponent, ref, watch } from 'vue'
     import Card from 'primevue/card'
     import InputText from 'primevue/inputtext'
     import Password from 'primevue/password'
@@ -65,10 +65,6 @@
             const notify = new Notify()
             const store = useStore(storeKey)
 
-            onMounted(() => {
-                console.log(store)
-            })
-            
             const login = async () => {
                 loggingIn.value = true
                 await store.dispatch('auth/signIn', { email: email.value, password: password.value })

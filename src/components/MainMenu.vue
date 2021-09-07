@@ -29,6 +29,16 @@
         to="/musicals/listen"
         >Listen List</router-link
     >
+
+    <div class="menu-header">Other</div>
+    <router-link
+        v-on:click="handleClick"
+        key="/stats"
+        class="menu-item"
+        to="/stats"
+        >Stats</router-link
+    >
+
 </template>
 <script lang='ts'>
     import { defineComponent } from 'vue'

@@ -4,6 +4,7 @@ import Movies from '../views/Movies.vue'
 import Musicals from '../views/Musicals.vue'
 import { store } from '@/store'
 import ItemsList from '@/components/ItemsList.vue'
+import Stats from '@/views/Stats.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -62,6 +63,11 @@ const routes: Array<RouteRecordRaw> = [
                 }
             },
         ]
+    },
+    {
+        path: '/stats',
+        name: 'Stats',
+        component: Stats
     }
 ]
 

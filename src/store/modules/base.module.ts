@@ -1,7 +1,9 @@
 import ItemData from '@/models/item'
+import { checkCompatEnabled } from '@vue/compiler-core'
 import firebase from 'firebase/app'
+import { mixins } from 'vue-class-component'
 import { ActionContext, ActionTree, GetterTree, Module, MutationTree } from 'vuex'
-import BaseState from '../states/base.state'
+import BaseState, { ItemStats } from '../states/base.state'
 import RootState from '../states/root.state'
 
 // Note because of the way the vuex store works I can't find a way to have instance variables
@@ -12,19 +14,20 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 
     public abstract state(): T
 
-    public abstract getters: GetterTree<T, RootState> = {
+    public getters: GetterTree<T, RootState> = {
         getRatedItems: this.getRatedItems,
-        getUnratedItems: this.getUnratedItems
+        getUnratedItems: this.getUnratedItems,
+        getStats: this.getStats
     }
 
 
-    public abstract actions: ActionTree<T, RootState> = {
+    public actions: ActionTree<T, RootState> = {
         loadItems: this.loadItems,
         addItem: this.addItem,
         updateItem: this.updateItem
     }
 
-    public abstract mutations: MutationTree<T> = {
+    public mutations: MutationTree<T> = {
         setItems: this.setItems
     }
 
@@ -42,6 +45,52 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
             return filtered(state, (item) => item.year === 0)
         } else {
             return {}
+        }
+    }
+
+    private getStats(state: T): ItemStats {
+        const items = Object.values(state.items)
+        const module = state.dataPath.substr(1, state.dataPath.length)
+        if (!items.length) {
+            return {
+                module
+            }
+        }
+
+        const stat = (check: (m: any, n: any) => NameValuePair) => items.reduce<NameValuePair>((a: NameValuePair, b: ItemData) => {
+            const result = check(a,b)
+            return {
+                name: result.name,
+                value: result.value
+            }
+        },
+        {
+            name: '',
+            value: 100
+        })
+
+        const max = stat((a: NameValuePair, b: ItemData) => {
+            return {
+                name: a.value > b.myRating ? a.name : b.name,
+                value: a.value > b.myRating ? a.value : b.myRating
+            }
+        })
+
+        const min = stat((a: NameValuePair, b: ItemData) => {
+            return {
+                name: b.myRating < a.value && b.myRating > 0 ? b.name : a.name,
+                value: b.myRating < a.value && b.myRating > 0 ? b.myRating : a.value
+            }
+        })
+        
+        return {
+            maxRating: max.value,
+            averageRating: Math.round(items.reduce((a ,b) => (a + b.myRating), 0) / items.length),
+            maxName: max.name,
+            minName: min.name,
+            minRating: min.value,
+            totalItems: items.length,
+            module
         }
     }
 
@@ -82,4 +131,10 @@ const filtered = <T extends BaseState>(state: T, test: (item: ItemData) => boole
                 [key]: state.items[key]
             }
         }, {})
+}
+
+
+interface NameValuePair {
+    name: string,
+    value: number
 }
