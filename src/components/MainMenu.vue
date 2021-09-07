@@ -38,6 +38,13 @@
         to="/stats"
         >Stats</router-link
     >
+    <router-link
+        v-on:click="handleClick"
+        key="/graph"
+        class="menu-item"
+        to="/graph"
+        >Graph</router-link
+    >
 
 </template>
 <script lang='ts'>

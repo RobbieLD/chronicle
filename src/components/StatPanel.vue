@@ -1,5 +1,8 @@
 <template>
     <Card class="stat">
+        <template #header>
+            <img :src="image"/>
+        </template>
         <template #title>
             <div v-sentance-case>
                 {{ stat.module }}
@@ -30,6 +33,10 @@
                 required: true,
                 type: Object as PropType<ItemStats>,
             },
+            image: {
+                required: true,
+                type: String
+            }
         },
         setup() {
             return {}

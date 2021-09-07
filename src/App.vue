@@ -6,12 +6,12 @@
     <div class="content grid">
         <router-view :key="$route.fullPath" />
     </div>
-    <add-button @clicked="openAddPanel"></add-button>
+    <add-button v-if="showAddButton" @clicked="openAddPanel"></add-button>
     <div class="footer">Created by Rob Davis | {{ sha }}</div>
     <Toast position="top-right" />
 </template>
 <script lang="ts">
-    import { defineComponent, onMounted, ref } from 'vue'
+    import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue'
     import NavBar from '@/components/NavBar.vue'
     import Sidebar from 'primevue/sidebar'
     import MainMenu from '@/components/MainMenu.vue'
@@ -19,6 +19,7 @@
     import AddButton from '@/components/AddButton.vue'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
+    import { useRoute } from 'vue-router'
 
     export default defineComponent({
         name: 'App',
@@ -32,6 +33,13 @@
         setup() {
             const menuIsOpen = ref(false)
             const store = useStore(storeKey)
+            const showAddButton = ref(true)
+
+            onBeforeUpdate(() => {
+                const route = useRoute()
+                console.log(route.meta)
+                showAddButton.value = route.meta?.showAdd as boolean
+            })
 
             const openAddPanel = () => {
                 store.commit('ui/setAddPanelOpen', true)
@@ -54,7 +62,8 @@
                 openMenu,
                 closeMenu,
                 openAddPanel,
-                sha: process.env?.VUE_APP_COMMIT
+                sha: process.env?.VUE_APP_COMMIT,
+                showAddButton
             }
         },
     })

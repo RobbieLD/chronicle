@@ -5,6 +5,7 @@ import Musicals from '../views/Musicals.vue'
 import { store } from '@/store'
 import ItemsList from '@/components/ItemsList.vue'
 import Stats from '@/views/Stats.vue'
+import Graph from '@/views/Graph.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -17,7 +18,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Movies',
         component: Movies,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            hasAdd: true
         },
         children: [
             {
@@ -43,7 +45,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Musicals',
         component: Musicals,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            hasAdd: true
         },
         children: [
             {
@@ -67,7 +70,20 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/stats',
         name: 'Stats',
-        component: Stats
+        component: Stats,
+        meta: {
+            requiresAuth: true,
+            hasAdd: false
+        },
+    },
+    {
+        path: '/graph',
+        name: 'Graph',
+        component: Graph,
+        meta: {
+            requiresAuth: true,
+            hasAdd: false
+        },
     }
 ]
 
