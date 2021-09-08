@@ -1,7 +1,5 @@
 import ItemData from '@/models/item'
-import { checkCompatEnabled } from '@vue/compiler-core'
 import firebase from 'firebase/app'
-import { mixins } from 'vue-class-component'
 import { ActionContext, ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import BaseState, { GraphData, ItemStats } from '../states/base.state'
 import RootState from '../states/root.state'
@@ -65,14 +63,14 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
                 }
 
                 return result
-            },{})
+            }, {})
         }
 
         const groups = groupBy(items, i => i.year)
         const labels = []
         const data = []
 
-        for(const groupKey of Object.keys(groups)) {
+        for (const groupKey of Object.keys(groups)) {
             if (groupKey > '0') {
                 labels.push(groupKey)
                 data.push({
@@ -97,38 +95,27 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
             }
         }
 
-        const stat = (check: (m: any, n: any) => NameValuePair) => items.reduce<NameValuePair>((a: NameValuePair, b: ItemData) => {
-            const result = check(a,b)
-            return {
-                name: result.name,
-                value: result.value
-            }
-        },
-        {
-            name: '',
-            value: 100
+        const stat = (check: (m: number, n: ItemData) => number) => items.reduce<number>((a: number, b: ItemData) => {
+            return check(a, b)
+        }, 100)
+
+        const max = stat((a: number, b: ItemData): number => {
+            return a > b.myRating ? a : b.myRating
         })
 
-        const max = stat((a: NameValuePair, b: ItemData) => {
-            return {
-                name: a.value > b.myRating ? a.name : b.name,
-                value: a.value > b.myRating ? a.value : b.myRating
-            }
+        const min = stat((a: number, b: ItemData): number => {
+            return b.myRating < a && b.myRating > 0 ? b.myRating : a
         })
 
-        const min = stat((a: NameValuePair, b: ItemData) => {
-            return {
-                name: b.myRating < a.value && b.myRating > 0 ? b.name : a.name,
-                value: b.myRating < a.value && b.myRating > 0 ? b.myRating : a.value
-            }
-        })
-        
+        const maxNames = items.filter(i => i.myRating == max).map<string>(t => t.name).join(', ')
+        const minNames = items.filter(i => i.myRating == min).map<string>(t => t.name).join(', ')
+
         return {
-            maxRating: max.value,
-            averageRating: Math.round(items.reduce((a ,b) => (a + b.myRating), 0) / items.length),
-            maxName: max.name,
-            minName: min.name,
-            minRating: min.value,
+            maxRating: max,
+            averageRating: Math.round(items.reduce((a, b) => (a + b.myRating), 0) / items.length),
+            maxName: maxNames,
+            minName: minNames,
+            minRating: min,
             totalItems: items.length,
             module
         }
@@ -146,7 +133,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
             const databaseRef = firebase.database().ref(state.dataPath)
             databaseRef.on('value', (snapshot) => {
                 commit('setItems', snapshot.val())
-            })        
+            })
         }
     }
 
@@ -174,10 +161,4 @@ const filtered = <T extends BaseState>(state: T, test: (item: ItemData) => boole
                 [key]: state.items[key]
             }
         }, {})
-}
-
-
-interface NameValuePair {
-    name: string,
-    value: number
 }
