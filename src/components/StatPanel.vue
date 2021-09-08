@@ -47,6 +47,7 @@
     .stat {
         margin-top: 0.5em;
         margin-left: 0.5em;
+        max-width: 30em;
         &__heading {
             font-weight: bold;
         }

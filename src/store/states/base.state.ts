@@ -1,7 +1,7 @@
 import ItemData from '@/models/item'
 
 export interface ItemStats {
-    totalItems?: number,
+    totalItems?: string,
     maxRating?: number,
     maxName?: string,
     minRating?: number,

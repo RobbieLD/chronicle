@@ -116,7 +116,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
             maxName: maxNames,
             minName: minNames,
             minRating: min,
-            totalItems: items.length,
+            totalItems: `${items.filter(i => i.myRating > 0).length}/${items.filter(i => i.myRating === 0).length}`,
             module
         }
     }
