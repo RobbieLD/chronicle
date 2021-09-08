@@ -8,7 +8,8 @@ export default class AuthModule implements Module<AuthState, RootState> {
     public state(): AuthState {
         return {
             error: null,
-            user: null
+            user: null,
+            ready: false
         }
     }
 
@@ -20,7 +21,8 @@ export default class AuthModule implements Module<AuthState, RootState> {
 
     public mutations: MutationTree<AuthState> = {
         setUser: this.setUser,
-        setError: this.setError
+        setError: this.setError,
+        setReady: this.setReady
     }
 
     public actions: ActionTree<AuthState, RootState> = {
@@ -32,6 +34,10 @@ export default class AuthModule implements Module<AuthState, RootState> {
     // Mutations
     private setUser (state: AuthState, user: firebase.User | null): void {
         state.user = user
+    }
+
+    private setReady (state: AuthState, ready: boolean): void {
+        state.ready = ready
     }
     
     private setError (state: AuthState, error: Error | null): void {
@@ -50,13 +56,14 @@ export default class AuthModule implements Module<AuthState, RootState> {
     }
     
     private authSubscribe ({ commit }: ActionContext<AuthState, RootState>): void {
-        firebase.auth().onAuthStateChanged(user => commit('setUser', user))
+        firebase.auth().onAuthStateChanged(user => {
+            commit('setReady', true)
+            commit('setUser', user)
+        })
     }
     
     private async signOut ({ commit }: ActionContext<AuthState, RootState>): Promise<void> {
-        await firebase
-          .auth()
-          .signOut()
+        await firebase.auth().signOut()
         commit('setUser', null)
       }    
 }

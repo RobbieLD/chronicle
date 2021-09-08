@@ -30,12 +30,12 @@
                     datasets: [
                         {
                             label: 'Movies',
-                            backgroundColor: '#42A5F5',
+                            backgroundColor: '#1c8b9c',
                             data: movies.data,
                         },
                         {
                             label: 'Musicals',
-                            backgroundColor: '#FFA726',
+                            backgroundColor: '#1c9c5c',
                             data: musicals.data,
                         }
                     ]
@@ -70,8 +70,7 @@
         margin-top: 0.5em;
         margin-left: 0.5em;
         margin-right: 0.5em;
-        // TODO: Make some break points for this
-        height: 80vh;
+        height: 88vh;
         width: 100%;
     }
 

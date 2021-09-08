@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 <template>
     <Card class="login">
-        <template #title> Login </template>
+        <template #title> {{ ready ? 'Login' : 'Authenticating' }} </template>
         <template #content>
-            <div>
+            <div v-if="ready">
                 <div class="field grid">
                     <label for="email" class="col-fixed login__label"
                         >Email</label
@@ -35,11 +35,14 @@
                     </div>
                 </div>
             </div>
+            <div v-else class="login__container">
+                <i class="pi pi-spin pi-spinner login__spinner"></i>
+            </div>
         </template>
     </Card>
 </template>
 <script lang='ts'>
-    import { defineComponent, ref, watch } from 'vue'
+    import { computed, defineComponent, ref, watch } from 'vue'
     import Card from 'primevue/card'
     import InputText from 'primevue/inputtext'
     import Password from 'primevue/password'
@@ -64,6 +67,7 @@
             const loggingIn = ref(false)
             const notify = new Notify()
             const store = useStore(storeKey)
+            const ready = computed(() => store.state.auth.ready)
 
             const login = async () => {
                 loggingIn.value = true
@@ -88,6 +92,7 @@
                 email,
                 loggingIn,
                 login,
+                ready
             }
         },
     })
@@ -100,6 +105,14 @@
         margin-top: 10em;
         &__label {
             width: 6em;
+        }
+
+        &__spinner {
+            font-size: 3em;
+        }
+
+        &__container {
+            text-align: center;
         }
     }
 </style>
