@@ -37,8 +37,7 @@
 
             onBeforeUpdate(() => {
                 const route = useRoute()
-                console.log(route.meta)
-                showAddButton.value = route.meta?.showAdd as boolean
+                showAddButton.value = route.meta?.hasAdd as boolean
             })
 
             const openAddPanel = () => {
