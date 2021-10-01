@@ -1,7 +1,7 @@
 <template>
     <Card class="item" :data-key="editKey">
         <template #header>
-            <div class="item__header">
+            <div class="item__header" :class="{ 'item__header--active' : data?.id > 0 }" @click="view">
                 <img
                     alt="Poster"
                     :src="data.posterUrl"
@@ -64,6 +64,7 @@
     import { moduleKey, storeKey } from '@/store'
     import Knob from 'primevue/knob'
     import ProgressBar from 'primevue/progressbar'
+    import { useRouter } from 'vue-router'
 
     export default defineComponent({
         name: 'Item',
@@ -91,6 +92,14 @@
             const rating = ref<number>(0)
             const store = useStore(storeKey)
             const module = inject(moduleKey)
+            const router = useRouter()
+
+            const view = async () => {
+                if (props.data?.id) {
+                    let routeData = router.resolve({name: 'Movie', params: { id: props.data?.id }})
+                    window.open(routeData.href, '_blank')
+                }
+            }
 
             const edit = async () => {
                 if (!isEditing.value) {
@@ -110,7 +119,8 @@
                 selectedYear,
                 rating,
                 years: ChronicleConfig.Years(),
-                edit
+                edit,
+                view
             }
         },
     })
@@ -127,6 +137,10 @@
         &__header {
             display: flex;
             justify-content: center;
+
+            &--active {
+                cursor: pointer;
+            }
         }
 
         &__edit {

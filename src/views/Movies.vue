@@ -15,12 +15,13 @@
         name: 'Movies',
         components: {
             Sidebar,
-            AddMovie
+            AddMovie,
         },
         setup() {
             const store = useStore(storeKey)
             provide(moduleKey, 'movies')
             const addIsOpen = ref(false)
+
             onMounted(() => {
                 store.dispatch('movies/loadItems')
             })
@@ -28,6 +29,7 @@
             const setPanelClosedInStore = () => {
                 store.commit('ui/setAddPanelOpen', false)
             }
+
 
             const closeAddPanel = () => {
                 setPanelClosedInStore()

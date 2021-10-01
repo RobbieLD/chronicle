@@ -24,6 +24,7 @@ export default class MovieSuggestion {
     public name: string
     public poster: MovieImage
     public rating: number
+    public id: number
     constructor(result: Result, baseImageUrl: string, imageSizes: string[]) {
         let year = '0'
         
@@ -31,6 +32,7 @@ export default class MovieSuggestion {
             year = result.release_date?.split('-')[0]
         }
         
+        this.id = result.id
         this.name = `${result.title} (${year})`
         this.rating = result.vote_average * 10
         this.poster = {

@@ -4,7 +4,7 @@
             <i class="pi pi-bars" @click="openMenu"></i>
         </div>
         <div class="col-fixed nav__title">
-            <span >{{ route.name }} </span>
+            <span >{{ title }} </span>
         </div>
         <div class="col nav__user">
             <Button v-show="userLoggedIn" label="Logout" @click="logout" />
@@ -12,8 +12,8 @@
     </div>
 </template>
 <script lang='ts'>
-    import { computed, defineComponent, ref } from 'vue'
-    import { useRoute, useRouter } from 'vue-router'
+    import { computed, defineComponent } from 'vue'
+    import { useRouter } from 'vue-router'
     import Button from 'primevue/button'
     import 'firebase/auth'
     import { useStore } from 'vuex'
@@ -26,11 +26,10 @@
         },
         emits: ['menuOpen'],
         setup(props, { emit }) {
-            const route = useRoute()
-            const title = ref(route.name)
             const router = useRouter()
             const store = useStore(storeKey)
             const userLoggedIn = computed(() => store.state.auth.user !== null)
+            const title = computed(() => store.state.ui.title)
             
             const openMenu = () => {
                 emit('menuOpen')
@@ -45,7 +44,6 @@
                 openMenu,
                 logout,
                 title,
-                route,
                 userLoggedIn
             }
         },

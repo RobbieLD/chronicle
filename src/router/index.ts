@@ -6,12 +6,18 @@ import { store } from '@/store'
 import ItemsList from '@/components/ItemsList.vue'
 import Stats from '@/views/Stats.vue'
 import Graph from '@/views/Graph.vue'
+import Movie from '../views/Movie.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/movie/:id',
+        name: 'Movie',
+        component: Movie
     },
     {
         path: '/movies/',

@@ -123,6 +123,7 @@
                     myRating: rating.value || 0,
                     globalRating: 0,
                     year: selectedYear.value || 0,
+                    id: 0
                 }
 
                 saving.value = true

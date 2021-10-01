@@ -4,10 +4,11 @@
     </div>
 </template>
 <script lang='ts'>
-    import { computed, defineComponent, inject } from 'vue'
+    import { computed, defineComponent, inject, onMounted } from 'vue'
     import { useStore } from 'vuex'
     import { moduleKey, storeKey } from '@/store'
     import Item from '@/components/Item.vue'
+    import { useRoute } from 'vue-router'
 
     export default defineComponent({
         name: 'ItemsList',
@@ -23,8 +24,14 @@
         setup(props) {
             const module = inject(moduleKey)
             const store = useStore(storeKey)
+            const route = useRoute()
+            
             // This might be being too clever but there's several ways of doing this.
             const items = computed(() => store.getters[`${module}/${props.getter}`])
+
+            onMounted(() => {
+                store.commit('ui/setTitle', route.name)
+            })
 
             return {
                 items,

@@ -4,5 +4,6 @@ export default interface ItemData {
     poasterWidth: number,
     myRating: number,
     globalRating: number
-    year: number
+    year: number,
+    id: number
 }

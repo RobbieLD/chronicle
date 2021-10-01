@@ -4,7 +4,6 @@
         <div class="p-fluid add-movie__panel">
             <div class="p-field add-movie__row">
                 <label for="name">Movie Name</label>
-                <div v-show="!searchReady">Loading Search ...</div>
                 <AutoComplete
                     id="name"
                     v-model="selectedMovie"
@@ -13,7 +12,6 @@
                     @item-select="movieSelected"
                     @clear="movieCleared"
                     field="name"
-                    v-show="searchReady"
                     class="add-movie__field"
                     forceSelection
                     dropdownMode="current"
@@ -60,7 +58,7 @@
     </div>
 </template>
 <script lang='ts'>
-    import { defineComponent, onMounted, ref } from 'vue'
+    import { defineComponent, ref } from 'vue'
     import AutoComplete from 'primevue/autocomplete'
     import AutoCompleteEvent from '@/models/prime-events'
     import MovieSuggestion from '@/models/movie-search'
@@ -83,7 +81,6 @@
         },
         emits: ['saved'],
         setup(props, { emit }) {
-            const searchReady = ref(false)
             const suggestions = ref<MovieSuggestion[]>([])
             const selectedMovie = ref<MovieSuggestion>()
             const rating = ref<number>(0)
@@ -92,11 +89,6 @@
             const saving = ref(false)
             const store = useStore(storeKey)
             const itemSelected = ref(false)
-
-            onMounted(async () => {
-                await store.dispatch('movies/loadConfiguration')
-                searchReady.value = true
-            })
 
             const movieSelected = () => {
                 itemSelected.value = true
@@ -120,6 +112,7 @@
                     myRating: rating.value || 0,
                     globalRating: selectedMovie.value?.rating || 0,
                     year: selectedYear.value || 0,
+                    id: selectedMovie.value?.id || 0
                 }
 
                 saving.value = true
@@ -136,7 +129,6 @@
 
             return {
                 movieSearch,
-                searchReady,
                 selectedMovie,
                 suggestions,
                 rating,

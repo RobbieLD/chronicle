@@ -4,6 +4,7 @@ import MovieState from '../states/movies.state'
 import MovieSuggestion from '@/models/movie-search'
 import MovieService from '@/services/movie.service'
 import BaseModule from './base.module'
+import MovieView from '@/models/movie-view'
 
 export default class MovieModule extends BaseModule<MovieState> {
     
@@ -29,7 +30,8 @@ export default class MovieModule extends BaseModule<MovieState> {
     public actions: ActionTree<MovieState, RootState> = {
         ...this.actions,
         loadConfiguration: this.loadConfiguration,
-        loadSuggestions: this.loadSuggestions
+        loadSuggestions: this.loadSuggestions,
+        loadMovieView: this.loadMovieView
     }
 
 
@@ -39,6 +41,14 @@ export default class MovieModule extends BaseModule<MovieState> {
         const results = await service.Configuration()
         commit('setImageBaseUrl', results.images.secure_base_url)
         commit('setImageSizes', results.images.poster_sizes)
+    }
+
+    private async loadMovieView({ state }: ActionContext<MovieState, RootState>, id: number): Promise<MovieView> {
+        const service = new MovieService()
+        const details = await service.Details(id)
+        const credits = await service.Credits(id)
+        const images = await service.Images(id)
+        return new MovieView(details, credits, images, state.imageBaseUrl, state.imageSizes)
     }
 
     private async loadSuggestions({ state }: ActionContext<MovieState, RootState>, query: string): Promise<MovieSuggestion[]> {

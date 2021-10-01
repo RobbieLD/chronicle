@@ -11,7 +11,7 @@
     <Toast position="top-right" />
 </template>
 <script lang="ts">
-    import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue'
+    import { defineComponent, onBeforeUpdate, onMounted, ref, watch } from 'vue'
     import NavBar from '@/components/NavBar.vue'
     import Sidebar from 'primevue/sidebar'
     import MainMenu from '@/components/MainMenu.vue'
@@ -52,8 +52,16 @@
                 menuIsOpen.value = false
             }
 
+            const setBackgroundUrl = (url: string) => {
+                const body = document.getElementsByTagName('body')[0]
+                body.style.backgroundImage = `url('${url}')`
+            }
+
+            watch(() => store.state.ui.background, (url) => setBackgroundUrl(url))
+
             onMounted(() => {
                 store.dispatch('auth/authSubscribe')
+                setBackgroundUrl(store.state.ui.background)
             })
 
             return {
@@ -77,8 +85,6 @@
         height: 100%;
         background-attachment: fixed;
         background-size: cover;
-        background-image: url('https://images.unsplash.com/photo-1476820865390-c52aeebb9891?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80');
-        //background-image: url('https://images.unsplash.com/photo-1549074862-6173e20d02a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2700&q=80');
     }
 
     #app {
