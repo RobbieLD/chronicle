@@ -7,11 +7,12 @@
             <template #thumbnail="slotProps">
                 <img :src="slotProps.item.thumbnail" />
             </template>
-        </Galleria> -->
+        </Galleria>
+        https://forum.vuejs.org/t/about-using-style-tags-inside-templates/7275/3 -->
     </div>
 </template>
 <script lang='ts'>
-    import { defineComponent, onMounted, ref } from 'vue'
+    import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
     import Galleria from 'primevue/galleria'
@@ -23,10 +24,28 @@
             //Galleria
         },
         setup() {
+            const mobileWith = 1000
             const movieView = ref<MovieView>()
             // Look up the movie information
             const store = useStore(storeKey)
             const route = useRoute()
+
+            const handleResize = () => {
+                if (window.innerWidth > mobileWith) {
+                    store.commit('ui/setBackground', movieView.value?.backdrop)
+                }
+                else {
+                    store.commit('ui/setBackground', movieView.value?.posters[0].poster)
+                }
+            }
+
+            const debounce = (func: () => void) => {
+                let timer: number
+                return (event: Event) => {
+                    if(timer) clearTimeout(timer)
+                    timer = setTimeout(func, 100, event)
+                }
+            }
             
             // TODO: Lionking 2019 ha wrong movie ID
             onMounted(async () => {
@@ -34,9 +53,14 @@
                 const movie: MovieView = await store.dispatch('movies/loadMovieView', route.params.id)
                 movieView.value = movie
                 store.commit('ui/setTitle', movie.title)
-                store.commit('ui/setBackground', movie.backdrop)
-                console.log(movie)
-            })    
+                handleResize()
+
+                window.addEventListener('resize', debounce(handleResize))
+            })
+
+            onUnmounted(() => {
+                window.removeEventListener('resize', handleResize)
+            })
 
             return {
                 movieView

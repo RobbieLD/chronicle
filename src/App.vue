@@ -70,7 +70,7 @@
                 closeMenu,
                 openAddPanel,
                 sha: process.env?.VUE_APP_COMMIT,
-                showAddButton
+                showAddButton,
             }
         },
     })
@@ -85,6 +85,8 @@
         height: 100%;
         background-attachment: fixed;
         background-size: cover;
+        background-position-x: center;
+        background-position-y: top;
     }
 
     #app {
