@@ -53,8 +53,9 @@
             }
 
             const setBackgroundUrl = (url: string) => {
-                const body = document.getElementsByTagName('body')[0]
-                body.style.backgroundImage = `url('${url}')`
+                const root = document.documentElement
+                root.style.setProperty('--backdrop', `url(${url})`)               
+                root.style.setProperty('--poster', `url(${url})`)
             }
 
             watch(() => store.state.ui.background, (url) => setBackgroundUrl(url))
@@ -87,6 +88,12 @@
         background-size: cover;
         background-position-x: center;
         background-position-y: top;
+
+        background-image: var(--backdrop);
+
+        @media only screen and (max-width: 1000px) {
+            background-image: var(--poster);
+        }
     }
 
     #app {

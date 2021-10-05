@@ -24,42 +24,23 @@
             //Galleria
         },
         setup() {
-            const mobileWith = 1000
             const movieView = ref<MovieView>()
             // Look up the movie information
             const store = useStore(storeKey)
             const route = useRoute()
 
-            const handleResize = () => {
-                if (window.innerWidth > mobileWith) {
-                    store.commit('ui/setBackground', movieView.value?.backdrop)
-                }
-                else {
-                    store.commit('ui/setBackground', movieView.value?.posters[0].poster)
-                }
-            }
-
-            const debounce = (func: () => void) => {
-                let timer: number
-                return (event: Event) => {
-                    if(timer) clearTimeout(timer)
-                    timer = setTimeout(func, 100, event)
-                }
-            }
-            
             // TODO: Lionking 2019 ha wrong movie ID
+
+
             onMounted(async () => {
                 await store.dispatch('movies/loadConfiguration')
                 const movie: MovieView = await store.dispatch('movies/loadMovieView', route.params.id)
                 movieView.value = movie
                 store.commit('ui/setTitle', movie.title)
-                handleResize()
 
-                window.addEventListener('resize', debounce(handleResize))
-            })
-
-            onUnmounted(() => {
-                window.removeEventListener('resize', handleResize)
+                const root = document.documentElement
+                root.style.setProperty('--backdrop', `url(${movie.backdrop})`)               
+                root.style.setProperty('--poster', `url(${movie.posters[0].poster})`)
             })
 
             return {
