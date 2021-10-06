@@ -28,6 +28,8 @@ interface MovieCredit {
 interface MovieImage {
     file_path: string
     iso_639_1: string
+    vote_count: number
+    vote_average: number
 }
 
 interface MoviePerson {
@@ -39,6 +41,8 @@ interface MoviePerson {
 export interface MoviePoster {
     poster: string
     thumbnail: string
+    rating: number
+    language: string
 }
 
 export default class MovieView {
@@ -50,6 +54,7 @@ export default class MovieView {
     description: string
     people: MoviePerson[]
     backdrop: string
+    director: string
 
     constructor(movie: MovieDetail, credits: MovieCredits, images: MovieImages, baseImageUrl: string, imageSizes: string[]) {
         this.title = movie.title
@@ -70,7 +75,9 @@ export default class MovieView {
         this.posters = images.posters.map(p => {
             return {
                 poster: `${baseImageUrl}/${imageSizes[4]}/${p.file_path}`,
-                thumbnail: `${baseImageUrl}/${imageSizes[1]}/${p.file_path}`
+                thumbnail: `${baseImageUrl}/${imageSizes[1]}/${p.file_path}`,
+                language: p.iso_639_1,
+                rating: p.vote_average
             }
         })
 
@@ -78,16 +85,10 @@ export default class MovieView {
             return {
                 name: c.name,
                 job: c.character,
-                profile: `${baseImageUrl}/${imageSizes[1]}/${c.profile_path}`
+                profile: c.profile_path ? `${baseImageUrl}/${imageSizes[1]}/${c.profile_path}` : ''
             }
         })
 
-        credits.cast.filter(c => c.known_for_department === 'Directing').forEach(d => {
-            this.people.push({
-                job: 'DIRECTOR',
-                name: d.name,
-                profile: `${baseImageUrl}/${imageSizes[1]}/${d.profile_path}`    
-            })
-        })
+        this.director = credits.crew.filter(c => c.known_for_department === 'directing').map(c => c.name).join(',')
     }
 }
