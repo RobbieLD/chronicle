@@ -89,6 +89,6 @@ export default class MovieView {
             }
         })
 
-        this.director = credits.crew.filter(c => c.known_for_department === 'directing').map(c => c.name).join(',')
+        this.director = credits.crew.find(c => c.known_for_department === 'Directing')?.name || 'Unknown'
     }
 }

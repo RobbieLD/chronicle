@@ -1,5 +1,27 @@
 <template>
     <Divider align="left" class="view-movie__divider">
+        <b>Details</b>
+    </Divider>
+
+    <Card>
+        <template #title> Release Date: {{ movieView?.release?.toDateString() }} </template>
+        <template #subtitle>
+            <div>
+                Runtime: {{ movieView?.runtime }}
+            </div>
+            <div>
+                Director: {{ movieView?.director }}    
+            </div>
+            <div>
+                Revenue: {{ movieView?.earning }}
+            </div>
+        </template>
+        <template #content>
+            {{ movieView?.description }}
+        </template>
+    </Card>
+
+    <Divider align="left" class="view-movie__divider">
         <b>Cast</b>
     </Divider>
 
@@ -121,6 +143,6 @@
     }
 
     .p-divider.p-divider-horizontal:before {
-        border-top: none;
+        border-top: none !important;
     }
 </style>
