@@ -24,6 +24,7 @@
 
             onMounted(() => {
                 store.dispatch('movies/loadItems')
+                store.dispatch('movies/loadConfiguration')
             })
 
             const setPanelClosedInStore = () => {
