@@ -39,6 +39,12 @@
                     :label="isEditing ? 'Save' : 'Edit'"
                     @click="edit"
                 ></Button>
+                <Button
+                    class="item__delete"
+                    v-if="isEditing"
+                    :label="'Delete'"
+                    @click="remove"
+                ></Button>
                 <Dropdown
                     v-model="selectedYear"
                     :options="years"
@@ -73,7 +79,7 @@
             Button,
             Card,
             Dropdown,
-            ProgressBar
+            ProgressBar,
         },
         props: {
             data: {
@@ -101,6 +107,10 @@
                 }
             }
 
+            const remove = async () => {
+                await store.dispatch(`${module}/removeItem`, props.editKey)
+            }
+
             const edit = async () => {
                 if (!isEditing.value) {
                     isEditing.value = true
@@ -120,7 +130,8 @@
                 rating,
                 years: ChronicleConfig.Years(),
                 edit,
-                view
+                view,
+                remove
             }
         },
     })
@@ -145,6 +156,11 @@
 
         &__edit {
             width: 100%;
+        }
+
+        &__delete {
+            width: 100%;
+            margin-top: 0.5em;
         }
 
         &__rating {

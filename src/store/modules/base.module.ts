@@ -25,7 +25,8 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
     public actions: ActionTree<T, RootState> = {
         loadItems: this.loadItems,
         addItem: this.addItem,
-        updateItem: this.updateItem
+        updateItem: this.updateItem,
+        removeItem: this.removeItem
     }
 
     public mutations: MutationTree<T> = {
@@ -137,9 +138,13 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
         }
     }
 
-    private async addItem({ state }: ActionContext<T, RootState>, movie: ItemData): Promise<void> {
+    private async addItem({ state }: ActionContext<T, RootState>, item: ItemData): Promise<void> {
         const databaseRef = firebase.database().ref(state.dataPath)
-        await databaseRef.push(movie)
+        await databaseRef.push(item)
+    }
+
+    private async removeItem({ state }: ActionContext<T, RootState>, key: string): Promise<void> {
+        await firebase.database().ref(`${state.dataPath}/${key}`).remove()
     }
 
     private async updateItem({ state }: ActionContext<T, RootState>, request: { item: ItemData, key: string }): Promise<void> {
