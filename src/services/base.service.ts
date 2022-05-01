@@ -1,8 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
-import ChronicleConfig from '@/config'
 
 export default abstract class BaseService {
-    public http: AxiosInstance;
+    public http: AxiosInstance
 
     constructor(baseUrl: string) {
         this.http = axios.create({
