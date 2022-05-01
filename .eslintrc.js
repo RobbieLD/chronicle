@@ -18,7 +18,8 @@ module.exports = {
       'quotes': ['error', 'single'],
       'no-unreachable': 2,
       'semi': [2, 'never'],
-      'eol-last': 2
+      'eol-last': 2,
+      'vue/no-useless-template-attributes': 'off',
+      'vue/multi-word-component-names': 'off'
     }
   }
-  

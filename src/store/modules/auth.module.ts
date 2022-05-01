@@ -1,10 +1,13 @@
 import { ActionContext, ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import RootState from '../states/root.state'
 import AuthState from '../states/auth.state'
-import firebase from 'firebase/app'
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, User } from 'firebase/auth'
+import { FirebaseApp, initializeApp } from 'firebase/app'
+import ChronicleConfig from '@/config'
 
 export default class AuthModule implements Module<AuthState, RootState> {  
-    
+    private firebase: FirebaseApp = initializeApp(ChronicleConfig.FirebaseConfig)
+
     public state(): AuthState {
         return {
             error: null,
@@ -32,7 +35,7 @@ export default class AuthModule implements Module<AuthState, RootState> {
     }
 
     // Mutations
-    private setUser (state: AuthState, user: firebase.User | null): void {
+    private setUser (state: AuthState, user: User | null): void {
         state.user = user
     }
 
@@ -47,7 +50,9 @@ export default class AuthModule implements Module<AuthState, RootState> {
     // Actions
     private async signIn ({ commit }: ActionContext<AuthState, RootState>, request: { email: string, password: string }): Promise<void> {
         try {
-            const response = await firebase.auth().signInWithEmailAndPassword(request.email, request.password)
+            const auth = getAuth(this.firebase)
+            signInWithEmailAndPassword
+            const response = await signInWithEmailAndPassword(auth, request.email, request.password)
             commit('setUser', response.user)
             commit('setError', null)
         } catch(error) {
@@ -56,14 +61,16 @@ export default class AuthModule implements Module<AuthState, RootState> {
     }
     
     private authSubscribe ({ commit }: ActionContext<AuthState, RootState>): void {
-        firebase.auth().onAuthStateChanged(user => {
+        const auth = getAuth(this.firebase)        
+        onAuthStateChanged(auth, user => {
             commit('setReady', true)
             commit('setUser', user)
         })
     }
     
     private async signOut ({ commit }: ActionContext<AuthState, RootState>): Promise<void> {
-        await firebase.auth().signOut()
+        const auth = getAuth(this.firebase)
+        await auth.signOut()
         commit('setUser', null)
       }    
 }

@@ -1,5 +1,7 @@
+import ChronicleConfig from '@/config'
 import ItemData from '@/models/item'
-import firebase from 'firebase/app'
+import { FirebaseApp, initializeApp } from 'firebase/app'
+import { getDatabase, ref, onValue, push, remove, update } from 'firebase/database'
 import { ActionContext, ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import BaseState, { GraphData, ItemStats } from '../states/base.state'
 import RootState from '../states/root.state'
@@ -9,7 +11,7 @@ import RootState from '../states/root.state'
 // method is not part of the class
 export default abstract class BaseModule<T extends BaseState> implements Module<T, RootState> {
     public namespaced?: boolean = true
-
+    private firebase: FirebaseApp = initializeApp(ChronicleConfig.FirebaseConfig)
     private isLoaded = false
 
     public abstract state(): T
@@ -89,7 +91,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 
     private getStats(state: T): ItemStats {
         const items = Object.values(state.items)
-        const module = state.dataPath.substr(1, state.dataPath.length)
+        const module = state.dataPath.substring(1, state.dataPath.length)
         if (!items.length) {
             return {
                 module
@@ -131,26 +133,26 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
     private async loadItems({ state, commit }: ActionContext<T, RootState>): Promise<void> {
         // No need to subscribe again
         if (!Object.keys(state.items).length) {
-            const databaseRef = firebase.database().ref(state.dataPath)
-            databaseRef.on('value', (snapshot) => {
+            const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
+            onValue(databaseRef, (snapshot) => {
                 commit('setItems', snapshot.val())
             })
         }
     }
 
     private async addItem({ state }: ActionContext<T, RootState>, item: ItemData): Promise<void> {
-        const databaseRef = firebase.database().ref(state.dataPath)
-        await databaseRef.push(item)
+        const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
+        await push(databaseRef, item)
     }
 
     private async removeItem({ state }: ActionContext<T, RootState>, key: string): Promise<void> {
-        await firebase.database().ref(`${state.dataPath}/${key}`).remove()
+        await remove(ref(getDatabase(this.firebase),`${state.dataPath}/${key}`))
     }
 
     private async updateItem({ state }: ActionContext<T, RootState>, request: { item: ItemData, key: string }): Promise<void> {
-        const databaseRef = firebase.database().ref(state.dataPath)
+        const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
         state.items[request.key] = request.item
-        await databaseRef.update(state.items)
+        await update(databaseRef, state.items)
     }
 }
 

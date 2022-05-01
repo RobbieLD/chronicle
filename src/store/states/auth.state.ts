@@ -1,7 +1,7 @@
-import firebase from 'firebase/app'
+import { User } from 'firebase/auth'
 
 export default interface AuthState {
-    user: firebase.User | null,
+    user: User | null,
     error: Error | null,
     ready: boolean
 }
