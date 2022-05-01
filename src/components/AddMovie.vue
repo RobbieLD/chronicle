@@ -38,14 +38,15 @@
                 />
             </div>
             <div class="p-field add-movie__row" v-show="itemSelected">
-                <label for="year">Year Seen</label>
-                <Dropdown
-                    class="add-movie__field"
-                    id="year"
-                    v-model="selectedYear"
-                    :options="years"
-                    placeholder="Select a year"
-                />
+                <label for="year">Date Seen</label>
+                <Calendar 
+                    id="date"
+                    v-model="selectedDate"
+                    :showIcon="false"
+                    :showTime="false"
+                    selectionMode="single"
+                    :maxDate="new Date()"
+                />   
             </div>
             <div class="p-field add-movie__row" v-show="itemSelected">
                 <Button
@@ -62,7 +63,7 @@
     import AutoComplete from 'primevue/autocomplete'
     import AutoCompleteEvent from '@/models/prime-events'
     import MovieSuggestion from '@/models/movie-search'
-    import Dropdown from 'primevue/dropdown'
+    import Calendar from 'primevue/calendar'
     import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
     import { useStore } from 'vuex'
@@ -76,7 +77,7 @@
         components: {
             AutoComplete,
             Knob,
-            Dropdown,
+            Calendar,
             Button,
         },
         emits: ['saved'],
@@ -84,7 +85,7 @@
             const suggestions = ref<MovieSuggestion[]>([])
             const selectedMovie = ref<MovieSuggestion>()
             const rating = ref<number>(0)
-            const selectedYear = ref<number>()
+            const selectedDate = ref<Date>()
             const invalid = ref(false)
             const saving = ref(false)
             const store = useStore(storeKey)
@@ -111,7 +112,7 @@
                     poasterWidth: selectedMovie.value?.poster?.width || 0,
                     myRating: rating.value || 0,
                     globalRating: selectedMovie.value?.rating || 0,
-                    year: selectedYear.value || 0,
+                    year: selectedDate.value,
                     id: selectedMovie.value?.id || 0
                 }
 
@@ -132,7 +133,7 @@
                 selectedMovie,
                 suggestions,
                 rating,
-                selectedYear,
+                selectedDate,
                 years: ChronicleConfig.Years(),
                 save,
                 invalid,

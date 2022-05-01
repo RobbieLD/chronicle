@@ -45,26 +45,27 @@
                     :label="'Delete'"
                     @click="remove"
                 ></Button>
-                <Dropdown
-                    v-model="selectedYear"
-                    :options="years"
-                    class="item__year"
-                    placeholder="Select a year"
+                <Calendar 
+                    id="date"
+                    v-model="selectedDate"
+                    :showIcon="false"
+                    :showTime="false"
+                    selectionMode="single"
                     v-if="isEditing"
-                />
+                    :maxDate="new Date()"
+                />     
             </div>
         </template>
         <template #footer>
-            {{ data.year || '' }}
+            {{ formatDate(data.year) }}
         </template>
     </Card>
 </template>
 <script lang='ts'>
     import { defineComponent, inject, PropType, ref } from 'vue'
     import Card from 'primevue/card'
-    import Dropdown from 'primevue/dropdown'
+    import Calendar from 'primevue/calendar'
     import ItemData from '@/models/item'
-    import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
     import { useStore } from 'vuex'
     import { moduleKey, storeKey } from '@/store'
@@ -78,7 +79,7 @@
             Knob,
             Button,
             Card,
-            Dropdown,
+            Calendar,
             ProgressBar,
         },
         props: {
@@ -94,7 +95,7 @@
         },
         setup(props) {
             const isEditing = ref(false)
-            const selectedYear = ref<number>(new Date().getUTCFullYear())
+            const selectedDate = ref<Date>(new Date())
             const rating = ref<number>(0)
             const store = useStore(storeKey)
             const module = inject(moduleKey)
@@ -118,17 +119,25 @@
                     // Save
                     const item = { ...props.data }
                     item.myRating = rating.value
-                    item.year = selectedYear.value
+                    item.year = selectedDate.value
                     await store.dispatch(`${module}/updateItem`, { item, key: props.editKey })
                     isEditing.value = false
                 }
             }
 
+            const formatDate = (date: Date | string | undefined) => {
+                if (!date) {
+                    return ''
+                } else {
+                    return new Date(date).toDateString()
+                }
+            }
+
             return {
                 isEditing,
-                selectedYear,
+                selectedDate,
                 rating,
-                years: ChronicleConfig.Years(),
+                formatDate,
                 edit,
                 view,
                 remove

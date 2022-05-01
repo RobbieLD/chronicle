@@ -38,7 +38,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
     // Getters
     private getRatedItems(state: T): Record<string, ItemData> {
         if (state.items) {
-            return filtered(state, (item) => item.year > 0)
+            return filtered(state, (item) => item.year !== undefined)
         } else {
             return {}
         }
@@ -46,7 +46,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 
     private getUnratedItems(state: T): Record<string, ItemData> {
         if (state.items) {
-            return filtered(state, (item) => item.year === 0)
+            return filtered(state, (item) => item.year === undefined)
         } else {
             return {}
         }
@@ -69,7 +69,7 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
             }, {})
         }
 
-        const groups = groupBy(items, i => i.year)
+        const groups = groupBy(items, i => i.year?.getFullYear() || 0)
         const labels = []
         const data = []
 
@@ -161,7 +161,10 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 const filtered = <T extends BaseState>(state: T, test: (item: ItemData) => boolean) => {
     return Object.keys(state.items)
         .filter(key => test(state.items[key]))
-        .sort((fKey, sKey) => state.items[sKey].year - state.items[fKey].year)
+        .sort((fKey, sKey) => {
+            console.log(new Date(state.items[sKey].year || '').getTime())
+            return new Date(state.items[sKey].year || 0).getTime() - new Date(state.items[fKey].year || 0).getTime()  
+        })
         .reduce((obj, key) => {
             return {
                 ...obj,
