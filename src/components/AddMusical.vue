@@ -124,7 +124,9 @@
                     myRating: rating.value || 0,
                     globalRating: 0,
                     year: selectedDate.value,
-                    id: 0
+                    id: 0,
+                    // TODO: Fix this
+                    flagged: false
                 }
 
                 saving.value = true

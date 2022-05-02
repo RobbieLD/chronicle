@@ -46,20 +46,40 @@
         >Graph</router-link
     >
 
+    <div class="menu-footer">
+        <span class="menu-footer__caption">Show Flagged</span>
+        <InputSwitch class="menu-footer__control" v-model="showFlagged" />
+    </div>
+
 </template>
 <script lang='ts'>
-    import { defineComponent } from 'vue'
+    import { computed, defineComponent } from 'vue'
+    import InputSwitch from 'primevue/inputswitch'
+    import { useStore } from 'vuex'
+    import { storeKey } from '@/store'
     export default defineComponent({
         name: 'MainMenu',
-        components: {},
+        components: {
+            InputSwitch
+        },
         emits: ['navigate'],
         setup(props, { emit }) {
-            const handleClick = () => {
-                emit('navigate')
-            }
+            const handleClick = () => emit('navigate')
+
+            const store = useStore(storeKey)
+            const showFlagged = computed({
+                get(): boolean {
+                    return store.state.ui.showFlagged
+                },
+
+                set (v: boolean) {
+                    store.commit('ui/setShowFlagged', v)
+                }
+            })       
 
             return {
                 handleClick,
+                showFlagged
             }
         },
     })
@@ -69,27 +89,43 @@
         color: var(--primary-color) !important;
     }
 
+    .menu {
+        &-item, &-header {
+            padding-left: 0.5em;
+            padding-bottom: 0.3em;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--surface-900);
+            text-decoration: none;
+        }
 
-    .menu-item, .menu-header {
-        padding-left: 0.5em;
-        padding-bottom: 0.3em;
-        font-size: 2em;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: var(--surface-900);
-        text-decoration: none;
-    }
+        &-header {
+            margin-top: 1em;
+            font-weight: bold;
+        }
 
-    .menu-header {
-        margin-top: 1em;
-        font-weight: bold;
-    }
+        &-item {
+            padding-left: 1em;
+            &:hover {
+                color: var(--primary-color);
+            }
+        }
 
-    .menu-item {
-        padding-left: 1em;
-        &:hover {
-            color: var(--primary-color);
+        &-footer {
+            display: flex;
+            position: absolute;
+            bottom: 1em;
+
+            &__caption {
+                margin-right: 1em;
+                font-size: 1.5em;
+            }
+
+            &__control {
+                align-self: center;
+            }
         }
     }
 </style>

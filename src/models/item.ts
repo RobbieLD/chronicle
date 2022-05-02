@@ -5,5 +5,6 @@ export default interface ItemData {
     myRating: number,
     globalRating: number
     year?: Date,
-    id: number
+    id: number,
+    flagged: boolean
 }

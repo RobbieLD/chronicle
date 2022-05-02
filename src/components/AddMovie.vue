@@ -113,7 +113,9 @@
                     myRating: rating.value || 0,
                     globalRating: selectedMovie.value?.rating || 0,
                     year: selectedDate.value,
-                    id: selectedMovie.value?.id || 0
+                    id: selectedMovie.value?.id || 0,
+                    // TODO: Fix this
+                    flagged: false
                 }
 
                 saving.value = true

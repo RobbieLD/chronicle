@@ -12,7 +12,6 @@ import RootState from '../states/root.state'
 export default abstract class BaseModule<T extends BaseState> implements Module<T, RootState> {
     public namespaced?: boolean = true
     private firebase: FirebaseApp = initializeApp(ChronicleConfig.FirebaseConfig)
-    private isLoaded = false
 
     public abstract state(): T
 
@@ -36,20 +35,12 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
     }
 
     // Getters
-    private getRatedItems(state: T): Record<string, ItemData> {
-        if (state.items) {
-            return filtered(state, (item) => item.year !== undefined)
-        } else {
-            return {}
-        }
+    private getRatedItems(state: T): (flagged: boolean) => Record<string, ItemData> {
+        return (flagged) => filtered(state, (item) => item.year !== undefined && (!item.flagged || flagged))
     }
 
-    private getUnratedItems(state: T): Record<string, ItemData> {
-        if (state.items) {
-            return filtered(state, (item) => item.year === undefined)
-        } else {
-            return {}
-        }
+    private getUnratedItems(state: T): () => Record<string, ItemData> {
+        return () => filtered(state, (item) => item.year === undefined)
     }
 
     private getGraphData(state: T): GraphData {
@@ -162,7 +153,6 @@ const filtered = <T extends BaseState>(state: T, test: (item: ItemData) => boole
     return Object.keys(state.items)
         .filter(key => test(state.items[key]))
         .sort((fKey, sKey) => {
-            console.log(new Date(state.items[sKey].year || '').getTime())
             return new Date(state.items[sKey].year || 0).getTime() - new Date(state.items[fKey].year || 0).getTime()  
         })
         .reduce((obj, key) => {
