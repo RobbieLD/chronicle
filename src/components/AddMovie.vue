@@ -38,6 +38,13 @@
                 />
             </div>
             <div class="p-field add-movie__row" v-show="itemSelected">
+                <ToggleButton
+                    v-model="flagged"
+                    onLabel="Flagged"
+                    offLabel="Unflagged"
+                />
+            </div>
+            <div class="p-field add-movie__row" v-show="itemSelected">
                 <label for="year">Date Seen</label>
                 <Calendar 
                     id="date"
@@ -66,6 +73,7 @@
     import Calendar from 'primevue/calendar'
     import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
+    import ToggleButton from 'primevue/togglebutton'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
     import 'firebase/database'
@@ -79,6 +87,7 @@
             Knob,
             Calendar,
             Button,
+            ToggleButton
         },
         emits: ['saved'],
         setup(props, { emit }) {
@@ -88,6 +97,7 @@
             const selectedDate = ref<Date>()
             const invalid = ref(false)
             const saving = ref(false)
+            const flagged = ref(false)
             const store = useStore(storeKey)
             const itemSelected = ref(false)
 
@@ -114,8 +124,7 @@
                     globalRating: selectedMovie.value?.rating || 0,
                     year: selectedDate.value,
                     id: selectedMovie.value?.id || 0,
-                    // TODO: Fix this
-                    flagged: false
+                    flagged: flagged.value
                 }
 
                 saving.value = true
@@ -142,7 +151,8 @@
                 saving,
                 itemSelected,
                 movieSelected,
-                movieCleared
+                movieCleared,
+                flagged
             }
         },
     })

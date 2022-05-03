@@ -45,6 +45,13 @@
                     :label="'Delete'"
                     @click="remove"
                 ></Button>
+                <ToggleButton
+                    class="item__flagged"
+                    v-model="flagged"
+                    onLabel="Flagged"
+                    offLabel="Unflagged"
+                    v-if="isEditing"
+                />  
                 <Calendar 
                     id="date"
                     v-model="selectedDate"
@@ -53,7 +60,7 @@
                     selectionMode="single"
                     v-if="isEditing"
                     :maxDate="new Date()"
-                />     
+                />
             </div>
         </template>
         <template #footer>
@@ -63,6 +70,7 @@
 </template>
 <script lang='ts'>
     import { defineComponent, inject, PropType, ref } from 'vue'
+    import ToggleButton from 'primevue/togglebutton'
     import Card from 'primevue/card'
     import Calendar from 'primevue/calendar'
     import ItemData from '@/models/item'
@@ -81,6 +89,7 @@
             Card,
             Calendar,
             ProgressBar,
+            ToggleButton
         },
         props: {
             data: {
@@ -95,6 +104,7 @@
         },
         setup(props) {
             const isEditing = ref(false)
+            const flagged = ref(false)
             const selectedDate = ref<Date>(new Date())
             const rating = ref<number>(0)
             const store = useStore(storeKey)
@@ -121,7 +131,7 @@
                     item.myRating = rating.value
                     item.year = selectedDate.value
                     await store.dispatch(`${module}/updateItem`, { item, key: props.editKey })
-                    isEditing.value = false
+                    isEditing.value = flagged.value
                 }
             }
 
@@ -140,7 +150,8 @@
                 formatDate,
                 edit,
                 view,
-                remove
+                remove,
+                flagged
             }
         },
     })
@@ -170,6 +181,12 @@
         &__delete {
             width: 100%;
             margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        &__flagged {
+            width: 100%;
+            margin-bottom: 0.5em;
         }
 
         &__rating {

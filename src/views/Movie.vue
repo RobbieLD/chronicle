@@ -87,7 +87,7 @@
             const store = useStore(storeKey)
             const route = useRoute()
 
-            // TODO: Lionking 2019 ha wrong movie ID
+            // TODO: Lionking 2019 and planet earth has wrong movie ID
 
             onMounted(async () => {
                 await store.dispatch('movies/loadConfiguration')
