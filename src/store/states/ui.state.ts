@@ -1,5 +1,6 @@
 export default interface UIState {
-    addPanelOpen: boolean
+    addPanelOpen: boolean,
+    settingsPanelOpen: boolean,
     title: string
     background: string,
     showFlagged: boolean

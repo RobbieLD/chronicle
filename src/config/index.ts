@@ -1,7 +1,7 @@
 export default class ChronicleConfig {
     public static ToastLifeSpan = 5000
     public static PosterHeight = 400
-    
+
     public static Years() : number[] {
         let currentYear = new Date().getUTCFullYear()
         const years = []
@@ -23,4 +23,9 @@ export default class ChronicleConfig {
         messagingSenderId: process.env?.VUE_APP_FIREBASE_MESSAGE_SENDER_ID,
         appId: process.env?.VUE_APP_FIREBASE_APP_ID
     }
+}
+
+export enum ActionButtonPosition {
+    left = 1,
+    right = 0
 }

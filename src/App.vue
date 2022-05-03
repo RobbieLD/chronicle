@@ -2,11 +2,15 @@
     <Sidebar v-model:visible="menuIsOpen">
         <main-menu @navigate="closeMenu"></main-menu>
     </Sidebar>
+    <Sidebar v-model:visible="settingsAreOpen" position="full" @hide="setPanelClosedInStore">
+        <div>TODO: Settings</div>
+    </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
     <div class="content grid">
         <router-view :key="$route.fullPath" />
     </div>
-    <add-button v-if="showAddButton" @clicked="openAddPanel"></add-button>
+    <action-button :position="addButtonPosition" icon="pi-plus" v-if="showAddButton" @clicked="openAddPanel"></action-button>
+    <action-button :position="settingsButtonPosition" icon="pi-cog" @clicked="openSettingsPanel"></action-button>
     <div class="footer">Created by Rob Davis | {{ sha }}</div>
     <Toast position="top-right" />
 </template>
@@ -16,7 +20,8 @@
     import Sidebar from 'primevue/sidebar'
     import MainMenu from '@/components/MainMenu.vue'
     import Toast from 'primevue/toast'
-    import AddButton from '@/components/AddButton.vue'
+    import { ActionButtonPosition } from '@/config/index'
+    import ActionButton from '@/components/ActionButton.vue'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
     import { useRoute } from 'vue-router'
@@ -28,12 +33,13 @@
             Sidebar,
             MainMenu,
             Toast,
-            AddButton,
+            ActionButton
         },
         setup() {
             const menuIsOpen = ref(false)
             const store = useStore(storeKey)
             const showAddButton = ref(true)
+            const settingsAreOpen = ref(false)
 
             onBeforeUpdate(() => {
                 const route = useRoute()
@@ -42,6 +48,10 @@
 
             const openAddPanel = () => {
                 store.commit('ui/setAddPanelOpen', true)
+            }
+
+            const openSettingsPanel = () => {
+                store.commit('ui/setSettingsPanelOpen', true)
             }
 
             const openMenu = () => {
@@ -58,7 +68,15 @@
                 root.style.setProperty('--poster', `url(${url})`)
             }
 
+            const setPanelClosedInStore = () => {
+                store.commit('ui/setSettingsPanelOpen', false)
+            }
+
             watch(() => store.state.ui.background, (url) => setBackgroundUrl(url))
+
+            watch(() => store.state.ui.settingsPanelOpen, (current) => {
+                settingsAreOpen.value = current
+            })
 
             onMounted(() => {
                 store.dispatch('auth/authSubscribe')
@@ -72,6 +90,11 @@
                 openAddPanel,
                 sha: process.env?.VUE_APP_COMMIT,
                 showAddButton,
+                openSettingsPanel,
+                addButtonPosition: ActionButtonPosition.right,
+                settingsButtonPosition: ActionButtonPosition.left,
+                settingsAreOpen,
+                setPanelClosedInStore
             }
         },
     })
