@@ -4,6 +4,8 @@ import AuthState from '../states/auth.state'
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, User } from 'firebase/auth'
 import { FirebaseApp, initializeApp } from 'firebase/app'
 import ChronicleConfig from '@/config'
+import { getDatabase, onValue, ref, set } from 'firebase/database'
+import Settings from '@/models/settings'
 
 export default class AuthModule implements Module<AuthState, RootState> {  
     private firebase: FirebaseApp = initializeApp(ChronicleConfig.FirebaseConfig)
@@ -12,7 +14,11 @@ export default class AuthModule implements Module<AuthState, RootState> {
         return {
             error: null,
             user: null,
-            ready: false
+            ready: false,
+            settings: {
+                backgroundUrl: '',
+                showFlagged: true
+            }
         }
     }
 
@@ -25,13 +31,16 @@ export default class AuthModule implements Module<AuthState, RootState> {
     public mutations: MutationTree<AuthState> = {
         setUser: this.setUser,
         setError: this.setError,
-        setReady: this.setReady
+        setReady: this.setReady,
+        setProfile: this.setProfile
     }
 
     public actions: ActionTree<AuthState, RootState> = {
         signIn: this.signIn,
         authSubscribe: this.authSubscribe,
-        signOut: this.signOut
+        signOut: this.signOut,
+        loadProfile: this.loadProfile,
+        updateProfile: this.updateProfile
     }
 
     // Mutations
@@ -45,6 +54,10 @@ export default class AuthModule implements Module<AuthState, RootState> {
     
     private setError (state: AuthState, error: Error | null): void {
         state.error = error
+    }
+
+    private setProfile (state: AuthState, settings: Partial<Settings>): void {
+        state.settings = { ...state.settings,...settings }
     }
 
     // Actions
@@ -72,5 +85,22 @@ export default class AuthModule implements Module<AuthState, RootState> {
         const auth = getAuth(this.firebase)
         await auth.signOut()
         commit('setUser', null)
-      }    
+    }
+
+    private async updateProfile({ state }: ActionContext<AuthState, RootState>): Promise<void> {
+        if (state.settings && state.user) {
+            const databaseRef = ref(getDatabase(this.firebase), state.user?.uid)
+            await set(databaseRef, state.settings)
+        }
+    }
+    
+    private async loadProfile({ state, commit }: ActionContext<AuthState, RootState>): Promise<void> {
+        // Only load if we've got a user loaded and haven't already subscribe
+        if (!state.settings && state.user) {
+            const databaseRef = ref(getDatabase(this.firebase), state.user.uid)
+            onValue(databaseRef, (snapshot) => {
+                commit('setProfile', snapshot.val())
+            })
+        }
+    }
 }

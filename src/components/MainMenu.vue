@@ -46,22 +46,14 @@
         >Graph</router-link
     >
 
-    <div class="menu-footer">
-        <span class="menu-footer__caption">Show Flagged</span>
-        <InputSwitch class="menu-footer__control" v-model="showFlagged" />
-    </div>
-
 </template>
 <script lang='ts'>
     import { computed, defineComponent } from 'vue'
-    import InputSwitch from 'primevue/inputswitch'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
     export default defineComponent({
         name: 'MainMenu',
-        components: {
-            InputSwitch
-        },
+        components: {},
         emits: ['navigate'],
         setup(props, { emit }) {
             const handleClick = () => emit('navigate')
@@ -110,21 +102,6 @@
             padding-left: 1em;
             &:hover {
                 color: var(--primary-color);
-            }
-        }
-
-        &-footer {
-            display: flex;
-            position: absolute;
-            bottom: 1em;
-
-            &__caption {
-                margin-right: 1em;
-                font-size: 1.5em;
-            }
-
-            &__control {
-                align-self: center;
             }
         }
     }

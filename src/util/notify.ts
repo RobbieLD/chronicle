@@ -8,13 +8,13 @@ export default class Notify {
         this.toast = useToast()
     }
 
-    public show(content: Error | string): void {
+    public show(content: Error | string, kind?: string): void {
         if (content instanceof Error) {
             this.toast.add({ severity: 'error', summary: content.name, detail: content.message, life: ChronicleConfig.ToastLifeSpan })
             // Add the error to the console for debugging purposes 
             console.error(content)
         } else {
-            this.toast.add({ severity: 'warn', summary: 'Warning', detail: content, life: ChronicleConfig.ToastLifeSpan })
+            this.toast.add({ severity: kind || 'warn', summary: 'Notification', detail: content, life: ChronicleConfig.ToastLifeSpan })
         }
     }
 }

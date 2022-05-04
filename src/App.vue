@@ -3,7 +3,7 @@
         <main-menu @navigate="closeMenu"></main-menu>
     </Sidebar>
     <Sidebar v-model:visible="settingsAreOpen" position="full" @hide="setPanelClosedInStore">
-        <div>TODO: Settings</div>
+        <settings></settings>
     </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
     <div class="content grid">
@@ -22,6 +22,8 @@
     import Toast from 'primevue/toast'
     import { ActionButtonPosition } from '@/config/index'
     import ActionButton from '@/components/ActionButton.vue'
+    import Settings from '@/components/Settings.vue'
+    import Notify from '@/util/notify'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
     import { useRoute } from 'vue-router'
@@ -33,13 +35,15 @@
             Sidebar,
             MainMenu,
             Toast,
-            ActionButton
+            ActionButton,
+            Settings
         },
         setup() {
             const menuIsOpen = ref(false)
             const store = useStore(storeKey)
             const showAddButton = ref(true)
             const settingsAreOpen = ref(false)
+            const notify = new Notify()
 
             onBeforeUpdate(() => {
                 const route = useRoute()
@@ -68,8 +72,10 @@
                 root.style.setProperty('--poster', `url(${url})`)
             }
 
-            const setPanelClosedInStore = () => {
+            const setPanelClosedInStore = async () => {
                 store.commit('ui/setSettingsPanelOpen', false)
+                await store.dispatch('auth/updateProfile')
+                notify.show('Settings update', 'info')
             }
 
             watch(() => store.state.ui.background, (url) => setBackgroundUrl(url))
