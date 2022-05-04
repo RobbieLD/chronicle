@@ -10,7 +10,6 @@ export default class UIModule implements Module<UIState, RootState> {
             settingsPanelOpen: false,
             title: '',
             background: 'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80',
-            showFlagged: true
         }
     }
 
@@ -24,7 +23,6 @@ export default class UIModule implements Module<UIState, RootState> {
         setAddPanelOpen: this.setAddPanelOpen,
         setTitle: this.setTitle,
         setBackground: this.setBackground,
-        setShowFlagged: this.setShowFlagged,
         setSettingsPanelOpen: this.setSettingsPanelOpen
     }
 
@@ -43,10 +41,6 @@ export default class UIModule implements Module<UIState, RootState> {
 
     private setTitle (state: UIState, title: string): void {
         state.title = title
-    }
-
-    private setShowFlagged (state: UIState, showFlagged: boolean): void {
-        state.showFlagged = showFlagged
     }
 
     private setBackground (state: UIState, background: string): void {

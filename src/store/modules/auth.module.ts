@@ -73,11 +73,12 @@ export default class AuthModule implements Module<AuthState, RootState> {
         }
     }
     
-    private authSubscribe ({ commit }: ActionContext<AuthState, RootState>): void {
+    private authSubscribe ({ commit, dispatch }: ActionContext<AuthState, RootState>): void {
         const auth = getAuth(this.firebase)        
         onAuthStateChanged(auth, user => {
             commit('setReady', true)
             commit('setUser', user)
+            dispatch('loadProfile')
         })
     }
     

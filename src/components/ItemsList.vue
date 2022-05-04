@@ -27,7 +27,7 @@
             const route = useRoute()
             
             // This might be being too clever but there's several ways of doing this.
-            const items = computed(() => store.getters[`${module}/${props.getter}`](store.state.ui.showFlagged))
+            const items = computed(() => store.getters[`${module}/${props.getter}`](store.state.auth.settings.showFlagged))
 
             onMounted(() => {
                 store.commit('ui/setTitle', route.name)
