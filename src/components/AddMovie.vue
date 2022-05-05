@@ -71,7 +71,6 @@
     import AutoCompleteEvent from '@/models/prime-events'
     import MovieSuggestion from '@/models/movie-search'
     import Calendar from 'primevue/calendar'
-    import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
     import ToggleButton from 'primevue/togglebutton'
     import { useStore } from 'vuex'
@@ -119,7 +118,7 @@
                 const movie: ItemData = {
                     name: selectedMovie.value?.name || '',
                     posterUrl: selectedMovie.value?.poster?.url || '',
-                    poasterWidth: selectedMovie.value?.poster?.width || 0,
+                    posterWidth: selectedMovie.value?.poster?.width || 0,
                     myRating: rating.value || 0,
                     globalRating: selectedMovie.value?.rating || 0,
                     year: selectedDate.value,
@@ -145,7 +144,6 @@
                 suggestions,
                 rating,
                 selectedDate,
-                years: ChronicleConfig.Years(),
                 save,
                 invalid,
                 saving,

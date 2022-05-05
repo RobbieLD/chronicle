@@ -75,7 +75,6 @@
     import AutoComplete from 'primevue/autocomplete'
     import AutoCompleteEvent, { AutoCompleteEventSelectedEvent, } from '@/models/prime-events'
     import Calendar from 'primevue/calendar'
-    import ChronicleConfig from '@/config'
     import Button from 'primevue/button'
     import ToggleButton from 'primevue/togglebutton'
     import { useStore } from 'vuex'
@@ -130,7 +129,7 @@
                 const musical: ItemData = {
                     name: selectedMusical.value?.title || '',
                     posterUrl: poster.value?.source || '',
-                    poasterWidth: poster.value?.width || 0,
+                    posterWidth: poster.value?.width || 0,
                     myRating: rating.value || 0,
                     globalRating: 0,
                     year: selectedDate.value,
@@ -156,7 +155,6 @@
                 suggestions,
                 rating,
                 selectedDate,
-                years: ChronicleConfig.Years(),
                 save,
                 invalid,
                 saving,

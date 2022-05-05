@@ -86,7 +86,9 @@
 
             onMounted(() => {
                 store.dispatch('auth/authSubscribe')
-                setBackgroundUrl(store.state.ui.background)
+                store.dispatch('ui/loadBackground').then(() => {
+                    setBackgroundUrl(store.state.ui.background)
+                })
             })
 
             return {

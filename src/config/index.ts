@@ -2,18 +2,6 @@ export default class ChronicleConfig {
     public static ToastLifeSpan = 5000
     public static PosterHeight = 400
 
-    public static Years() : number[] {
-        let currentYear = new Date().getUTCFullYear()
-        const years = []
-        
-        while(currentYear > 1995) {
-            years.push(currentYear)
-            currentYear--
-        }
-
-        return years
-    }
-
     public static MovieDbKey = process.env?.VUE_APP_MOVIE_DB_KEY
     public static FirebaseConfig: Record<string, string> = {
         apiKey: process.env?.VUE_APP_FIREBASE_API_KEY,
@@ -23,6 +11,8 @@ export default class ChronicleConfig {
         messagingSenderId: process.env?.VUE_APP_FIREBASE_MESSAGE_SENDER_ID,
         appId: process.env?.VUE_APP_FIREBASE_APP_ID
     }
+
+    public static UnsplashApiKey = process.env?.VUE_APP_UNSPLASH_API_KEY
 }
 
 export enum ActionButtonPosition {

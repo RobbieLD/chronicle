@@ -9,6 +9,7 @@ import Settings from '@/models/settings'
 
 export default class AuthModule implements Module<AuthState, RootState> {  
     private firebase: FirebaseApp = initializeApp(ChronicleConfig.FirebaseConfig)
+    private settingsLoaded = false
 
     public state(): AuthState {
         return {
@@ -16,7 +17,6 @@ export default class AuthModule implements Module<AuthState, RootState> {
             user: null,
             ready: false,
             settings: {
-                backgroundUrl: '',
                 showFlagged: true
             }
         }
@@ -90,17 +90,18 @@ export default class AuthModule implements Module<AuthState, RootState> {
 
     private async updateProfile({ state }: ActionContext<AuthState, RootState>): Promise<void> {
         if (state.settings && state.user) {
-            const databaseRef = ref(getDatabase(this.firebase), state.user?.uid)
+            const databaseRef = ref(getDatabase(this.firebase), `${state.user?.uid}/settings`)
             await set(databaseRef, state.settings)
         }
     }
     
     private async loadProfile({ state, commit }: ActionContext<AuthState, RootState>): Promise<void> {
         // Only load if we've got a user loaded and haven't already subscribe
-        if (!state.settings && state.user) {
-            const databaseRef = ref(getDatabase(this.firebase), state.user.uid)
+        if (!this.settingsLoaded && state.user) {
+            const databaseRef = ref(getDatabase(this.firebase), `${state.user.uid}/settings`)
             onValue(databaseRef, (snapshot) => {
                 commit('setProfile', snapshot.val())
+                this.settingsLoaded = true
             })
         }
     }

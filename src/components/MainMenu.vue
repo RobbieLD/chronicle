@@ -61,7 +61,7 @@
             const store = useStore(storeKey)
             const showFlagged = computed({
                 get(): boolean {
-                    return store.state.ui.showFlagged
+                    return store.state.auth.settings.showFlagged
                 },
 
                 set (v: boolean) {

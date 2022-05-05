@@ -133,7 +133,8 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 
     private async addItem({ state }: ActionContext<T, RootState>, item: ItemData): Promise<void> {
         const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
-        await push(databaseRef, item)
+        const payload : Omit<ItemData, 'year'> = { ...item }
+        await push(databaseRef, { ...payload, year: item.year?.toISOString() || null })
     }
 
     private async removeItem({ state }: ActionContext<T, RootState>, key: string): Promise<void> {

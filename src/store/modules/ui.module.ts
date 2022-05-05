@@ -1,4 +1,5 @@
-import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
+import UnsplashService from '@/services/unsplash.service'
+import { ActionContext, ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import RootState from '../states/root.state'
 import UIState from '../states/ui.state'
 
@@ -9,7 +10,7 @@ export default class UIModule implements Module<UIState, RootState> {
             addPanelOpen: false,
             settingsPanelOpen: false,
             title: '',
-            background: 'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80',
+            background: '',
         }
     }
 
@@ -27,7 +28,7 @@ export default class UIModule implements Module<UIState, RootState> {
     }
 
     public actions: ActionTree<UIState, RootState> = {
-        
+        loadBackground: this.loadBackground
     }
 
     // Mutations
@@ -45,5 +46,12 @@ export default class UIModule implements Module<UIState, RootState> {
 
     private setBackground (state: UIState, background: string): void {
         state.background = background
+    }
+
+    // Actions
+    private async loadBackground ({ commit }: ActionContext<UIState, RootState>): Promise<void> {
+        const service = new UnsplashService()
+        const url = await service.GetRandomPhoto()
+        commit('setBackground', url)
     }
 }
