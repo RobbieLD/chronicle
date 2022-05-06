@@ -115,6 +115,7 @@
         margin: 0;
         padding: 0;
         height: 100%;
+        background-color: #262837;
         background-attachment: fixed;
         background-size: cover;
         background-position-x: center;
