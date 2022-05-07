@@ -30,6 +30,7 @@ jobs:
           VUE_APP_FIREBASE_MESSAGE_SENDER_ID: ${{ secrets.FIREBASE_MESSAGE_SENDER_ID }}
           VUE_APP_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           VUE_APP_COMMIT: ${{ github.sha }}
+          VUE_APP_UNSPLASH_API_KEY: ${{ secrets.UNSPLASH_API_KEY }}
       
       - name: Domain
         run: echo 'chronicle.robdavis.dev' > dist/CNAME
