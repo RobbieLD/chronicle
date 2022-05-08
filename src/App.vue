@@ -2,7 +2,7 @@
     <Sidebar v-model:visible="menuIsOpen">
         <main-menu @navigate="closeMenu"></main-menu>
     </Sidebar>
-    <Sidebar v-model:visible="settingsAreOpen" position="full" @hide="setPanelClosedInStore">
+    <Sidebar v-model:visible="settingsAreOpen" position="full">
         <settings></settings>
     </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
@@ -23,10 +23,10 @@
     import { ActionButtonPosition } from '@/config/index'
     import ActionButton from '@/components/ActionButton.vue'
     import Settings from '@/components/Settings.vue'
-    import Notify from '@/util/notify'
-    import { useStore } from 'vuex'
+    import { MutationPayload, useStore } from 'vuex'
     import { storeKey } from '@/store'
     import { useRoute } from 'vue-router'
+    import RootState from './store/states/root.state'
 
     export default defineComponent({
         name: 'App',
@@ -43,7 +43,6 @@
             const store = useStore(storeKey)
             const showAddButton = ref(true)
             const settingsAreOpen = ref(false)
-            const notify = new Notify()
 
             onBeforeUpdate(() => {
                 const route = useRoute()
@@ -72,12 +71,6 @@
                 root.style.setProperty('--poster', `url(${url})`)
             }
 
-            const setPanelClosedInStore = async () => {
-                store.commit('ui/setSettingsPanelOpen', false)
-                await store.dispatch('auth/updateProfile')
-                notify.show('Settings update', 'info')
-            }
-
             watch(() => store.state.ui.background, (url) => setBackgroundUrl(url))
 
             watch(() => store.state.ui.settingsPanelOpen, (current) => {
@@ -86,11 +79,18 @@
 
             const backgroundLocation = computed(() => store.state.ui.backgroundLocation)
 
+            // This can't be async because the entire component would need to be inside a suspense and it's the top level
             onMounted(() => {
                 store.dispatch('auth/authSubscribe')
-                store.dispatch('ui/loadBackground').then(() => {
-                    setBackgroundUrl(store.state.ui.background)
-                })
+            })
+
+            // watch for the profile to be updated so we can load the background
+            store.subscribe((mutation: MutationPayload) => {
+                if (mutation.type === 'auth/setProfile') {
+                    store.dispatch('ui/loadBackground', mutation.payload.backgroundQuery).then(() => {
+                        setBackgroundUrl(store.state.ui.background)
+                    })
+                }
             })
 
             return {
@@ -104,7 +104,6 @@
                 addButtonPosition: ActionButtonPosition.right,
                 settingsButtonPosition: ActionButtonPosition.left,
                 settingsAreOpen,
-                setPanelClosedInStore,
                 backgroundLocation
             }
         },

@@ -1,3 +1,4 @@
 export default interface Settings {
-    showFlagged: boolean
+    showFlagged: boolean,
+    backgroundQuery: string
 }

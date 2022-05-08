@@ -6,40 +6,45 @@
                 <label for="showFlagged">Show Flagged</label>
                 <InputSwitch class="settings__field" v-model="showFlagged" />
             </div>
+            <div class="p-field settings__row">
+                <label for="showFlagged">Background Query</label>
+                <InputText class="settings__field" v-model="backgroundQuery" />
+            </div>
         </div>
     </div>
 </template>
 <script lang='ts'>
-    import { computed, defineComponent } from 'vue'
+    import { defineComponent, onBeforeUnmount, ref } from 'vue'
     import InputSwitch from 'primevue/inputswitch'
     import { useStore } from 'vuex'
     import { storeKey } from '@/store'
-    import Settings from '@/models/settings'
+    import InputText from 'primevue/inputtext'
         
     export default defineComponent({
         name: 'Settings',
         components: {
-            InputSwitch
+            InputSwitch,
+            InputText
         },
         setup() {
             const store = useStore(storeKey)
             
-            const save = (args: Partial<Settings>) => {
-                store.commit('auth/setProfile', args)
-            }
+            const backgroundQuery = ref<string>(store.state.auth.settings.backgroundQuery)
+            const showFlagged = ref<boolean>(store.state.auth.settings.showFlagged)
 
-            const showFlagged = computed({
-                get(): boolean {
-                    return store.state.auth.settings.showFlagged
-                },
-                set(v: boolean): void {
-                    save({ showFlagged: v })
-                }
+            onBeforeUnmount(() => {
+                // Save the state to the store
+                store.commit('ui/setSettingsPanelOpen', false)
+                store.dispatch('auth/updateProfile', {
+                    backgroundQuery: backgroundQuery.value,
+                    showFlagged: showFlagged.value
+                })
             })
 
 
             return {
-                showFlagged
+                showFlagged,
+                backgroundQuery
             }
         },
     })

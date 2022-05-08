@@ -55,9 +55,9 @@ export default class UIModule implements Module<UIState, RootState> {
     }
 
     // Actions
-    private async loadBackground ({ commit }: ActionContext<UIState, RootState>): Promise<void> {
+    private async loadBackground ({ commit }: ActionContext<UIState, RootState>, query: string): Promise<void> {
         const service = new UnsplashService()
-        const background = await service.GetRandomPhoto()
+        const background = await service.GetRandomPhoto(query)
         commit('setBackground', background.links.download)
         commit('setBackgroundLocation', background.location.name || background.description)
     }

@@ -17,7 +17,8 @@ export default class AuthModule implements Module<AuthState, RootState> {
             user: null,
             ready: false,
             settings: {
-                showFlagged: true
+                showFlagged: true,
+                backgroundQuery: ''
             }
         }
     }
@@ -88,10 +89,10 @@ export default class AuthModule implements Module<AuthState, RootState> {
         commit('setUser', null)
     }
 
-    private async updateProfile({ state }: ActionContext<AuthState, RootState>): Promise<void> {
+    private async updateProfile({ state }: ActionContext<AuthState, RootState>, settings: Settings): Promise<void> {
         if (state.settings && state.user) {
             const databaseRef = ref(getDatabase(this.firebase), `${state.user?.uid}/settings`)
-            await set(databaseRef, state.settings)
+            await set(databaseRef, settings)
         }
     }
     
