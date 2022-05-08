@@ -11,6 +11,7 @@ export default class UIModule implements Module<UIState, RootState> {
             settingsPanelOpen: false,
             title: '',
             background: '',
+            backgroundLocation: ''
         }
     }
 
@@ -24,7 +25,8 @@ export default class UIModule implements Module<UIState, RootState> {
         setAddPanelOpen: this.setAddPanelOpen,
         setTitle: this.setTitle,
         setBackground: this.setBackground,
-        setSettingsPanelOpen: this.setSettingsPanelOpen
+        setSettingsPanelOpen: this.setSettingsPanelOpen,
+        setBackgroundLocation: this.setBackgroundLocation
     }
 
     public actions: ActionTree<UIState, RootState> = {
@@ -48,10 +50,15 @@ export default class UIModule implements Module<UIState, RootState> {
         state.background = background
     }
 
+    private setBackgroundLocation (state: UIState, backgroundLocation: string): void {
+        state.backgroundLocation = backgroundLocation
+    }
+
     // Actions
     private async loadBackground ({ commit }: ActionContext<UIState, RootState>): Promise<void> {
         const service = new UnsplashService()
-        const url = await service.GetRandomPhoto()
-        commit('setBackground', url)
+        const background = await service.GetRandomPhoto()
+        commit('setBackground', background.links.download)
+        commit('setBackgroundLocation', background.location.name || background.description)
     }
 }

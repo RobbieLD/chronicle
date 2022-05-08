@@ -11,11 +11,11 @@
     </div>
     <action-button :position="addButtonPosition" icon="pi-plus" v-if="showAddButton" @clicked="openAddPanel"></action-button>
     <action-button :position="settingsButtonPosition" icon="pi-cog" @clicked="openSettingsPanel"></action-button>
-    <div class="footer">Created by Rob Davis | {{ sha }}</div>
+    <div class="footer">Created by Rob Davis | {{ sha }} | {{ backgroundLocation }}</div>
     <Toast position="top-right" />
 </template>
 <script lang="ts">
-    import { defineComponent, onBeforeUpdate, onMounted, ref, watch } from 'vue'
+    import { computed, defineComponent, onBeforeUpdate, onMounted, ref, watch } from 'vue'
     import NavBar from '@/components/NavBar.vue'
     import Sidebar from 'primevue/sidebar'
     import MainMenu from '@/components/MainMenu.vue'
@@ -84,6 +84,8 @@
                 settingsAreOpen.value = current
             })
 
+            const backgroundLocation = computed(() => store.state.ui.backgroundLocation)
+
             onMounted(() => {
                 store.dispatch('auth/authSubscribe')
                 store.dispatch('ui/loadBackground').then(() => {
@@ -96,13 +98,14 @@
                 openMenu,
                 closeMenu,
                 openAddPanel,
-                sha: process.env?.VUE_APP_COMMIT,
+                sha: process.env?.VUE_APP_COMMIT || 'git-hash',
                 showAddButton,
                 openSettingsPanel,
                 addButtonPosition: ActionButtonPosition.right,
                 settingsButtonPosition: ActionButtonPosition.left,
                 settingsAreOpen,
-                setPanelClosedInStore
+                setPanelClosedInStore,
+                backgroundLocation
             }
         },
     })
