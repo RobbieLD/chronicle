@@ -3,5 +3,6 @@ export default interface UIState {
     settingsPanelOpen: boolean,
     title: string
     background: string,
-    backgroundLocation: string
+    backgroundLocation: string,
+    showContent: boolean
 }

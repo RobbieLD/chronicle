@@ -6,7 +6,7 @@
         <settings></settings>
     </Sidebar>
     <nav-bar @menuOpen="openMenu"></nav-bar>
-    <div class="content grid">
+    <div class="content grid" v-show="showContent">
         <router-view :key="$route.fullPath" />
     </div>
     <action-button :position="addButtonPosition" icon="pi-plus" v-if="showAddButton" @clicked="openAddPanel"></action-button>
@@ -26,8 +26,7 @@
     import { MutationPayload, useStore } from 'vuex'
     import { storeKey } from '@/store'
     import { useRoute } from 'vue-router'
-    import RootState from './store/states/root.state'
-
+    
     export default defineComponent({
         name: 'App',
         components: {
@@ -43,6 +42,8 @@
             const store = useStore(storeKey)
             const showAddButton = ref(true)
             const settingsAreOpen = ref(false)
+
+            const showContent = computed(() => store.state.ui.showContent)
 
             onBeforeUpdate(() => {
                 const route = useRoute()
@@ -104,7 +105,8 @@
                 addButtonPosition: ActionButtonPosition.right,
                 settingsButtonPosition: ActionButtonPosition.left,
                 settingsAreOpen,
-                backgroundLocation
+                backgroundLocation,
+                showContent
             }
         },
     })

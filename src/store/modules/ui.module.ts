@@ -11,7 +11,8 @@ export default class UIModule implements Module<UIState, RootState> {
             settingsPanelOpen: false,
             title: '',
             background: '',
-            backgroundLocation: ''
+            backgroundLocation: '',
+            showContent: true
         }
     }
 
@@ -26,7 +27,8 @@ export default class UIModule implements Module<UIState, RootState> {
         setTitle: this.setTitle,
         setBackground: this.setBackground,
         setSettingsPanelOpen: this.setSettingsPanelOpen,
-        setBackgroundLocation: this.setBackgroundLocation
+        setBackgroundLocation: this.setBackgroundLocation,
+        setShowContent: this.setShowContent
     }
 
     public actions: ActionTree<UIState, RootState> = {
@@ -36,6 +38,10 @@ export default class UIModule implements Module<UIState, RootState> {
     // Mutations
     private setAddPanelOpen (state: UIState, open: boolean): void {
         state.addPanelOpen = open
+    }
+
+    private setShowContent (state: UIState, show: boolean): void {
+        state.showContent = show
     }
 
     private setSettingsPanelOpen (state: UIState, open: boolean): void {
