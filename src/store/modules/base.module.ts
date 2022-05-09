@@ -7,13 +7,15 @@ import BaseState, { GraphData, ItemStats } from '../states/base.state'
 import RootState from '../states/root.state'
 
 // Note because of the way the vuex store works I can't find a way to have instance variables
-// in this class which are still avaliable to the methods at run time. That's why the filter
+// in this class which are still available to the methods at run time. That's why the filter
 // method is not part of the class
 export default abstract class BaseModule<T extends BaseState> implements Module<T, RootState> {
     public namespaced?: boolean = true
     private firebase: FirebaseApp = initializeApp(ChronicleConfig.FirebaseConfig)
 
     public abstract state(): T
+
+    protected abstract Preprocess({ state }: ActionContext<T, RootState>, item: ItemData): Promise<ItemData>
 
     public getters: GetterTree<T, RootState> = {
         getRatedItems: this.getRatedItems,
@@ -22,12 +24,12 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
         getGraphData: this.getGraphData
     }
 
-
     public actions: ActionTree<T, RootState> = {
         loadItems: this.loadItems,
         addItem: this.addItem,
         updateItem: this.updateItem,
-        removeItem: this.removeItem
+        removeItem: this.removeItem,
+        preprocess: this.Preprocess
     }
 
     public mutations: MutationTree<T> = {
@@ -141,9 +143,10 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
         await remove(ref(getDatabase(this.firebase),`${state.dataPath}/${key}`))
     }
 
-    private async updateItem({ state }: ActionContext<T, RootState>, request: { item: ItemData, key: string }): Promise<void> {
+    private async updateItem({ state, dispatch }: ActionContext<T, RootState>, request: { item: ItemData, key: string }): Promise<void> {
+        const data = await dispatch('preprocess', request.item)
         const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
-        state.items[request.key] = request.item
+        state.items[request.key] = data
         await update(databaseRef, state.items)
     }
 }

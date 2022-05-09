@@ -5,6 +5,7 @@ import MovieSuggestion from '@/models/movie-search'
 import MovieService from '@/services/movie.service'
 import BaseModule from './base.module'
 import MovieView from '@/models/movie-view'
+import ItemData from '@/models/item'
 
 export default class MovieModule extends BaseModule<MovieState> {
     
@@ -34,6 +35,19 @@ export default class MovieModule extends BaseModule<MovieState> {
         loadMovieView: this.loadMovieView
     }
 
+    protected async Preprocess(_: ActionContext<MovieState, RootState>, item: ItemData): Promise<ItemData> {
+        // This means that a rating wasn't available when this item
+        // was originally added to the database so we can update it now
+        console.log(item.globalRating)
+        if (item.globalRating < 0) {
+            const service = new MovieService()
+            const results = await service.Details(item.id)
+            item.globalRating = results.vote_average * 10
+            console.log(results)
+        }
+
+        return item
+    }
 
     // Actions
     private async loadConfiguration({ state, commit }: ActionContext<MovieState, RootState>): Promise<void> {

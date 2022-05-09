@@ -5,8 +5,9 @@ import MusicalService from '@/services/musical.service'
 import { Thumbnail } from '@/models/musical-poster'
 import MusicalSuggestion from '@/models/musical-search'
 import BaseModule from './base.module'
+import ItemData from '@/models/item'
 
-export default class MusicalModule extends BaseModule<MusicalState> {    
+export default class MusicalModule extends BaseModule<MusicalState> { 
         
     public state(): MusicalState {
         return {
@@ -27,6 +28,10 @@ export default class MusicalModule extends BaseModule<MusicalState> {
         ...this.actions,
         loadPoster: this.loadPoster,
         loadSuggestions: this.loadSuggestions
+    }
+
+    protected async Preprocess(_: ActionContext<MusicalState, RootState>, item: ItemData): Promise<ItemData> {
+        return Promise.resolve(item)
     }
 
     private async loadSuggestions (_: ActionContext<MusicalState, RootState>, query: string): Promise<MusicalSuggestion[]> {

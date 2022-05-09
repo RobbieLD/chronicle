@@ -6,7 +6,8 @@ export interface MovieDetail {
     budget: string,
     overview: string,
     revenue: number,
-    runtime: number
+    runtime: number,
+    vote_average: number
 }
 
 export interface MovieImages {

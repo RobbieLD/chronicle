@@ -120,7 +120,7 @@
                     posterUrl: selectedMovie.value?.poster?.url || '',
                     posterWidth: selectedMovie.value?.poster?.width || 0,
                     myRating: rating.value || 0,
-                    globalRating: selectedMovie.value?.rating || 0,
+                    globalRating: selectedMovie.value?.rating || -1,
                     year: selectedDate.value,
                     id: selectedMovie.value?.id || 0,
                     flagged: flagged.value
