@@ -14,7 +14,8 @@ export default class MovieModule extends BaseModule<MovieState> {
             items: {},
             imageBaseUrl: '',
             imageSizes: [],
-            dataPath: '/movies'
+            dataPath: 'movies',
+            userId: ''
         }
     }
 
@@ -43,7 +44,6 @@ export default class MovieModule extends BaseModule<MovieState> {
             const service = new MovieService()
             const results = await service.Details(item.id)
             item.globalRating = results.vote_average * 10
-            console.log(results)
         }
 
         return item

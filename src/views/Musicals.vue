@@ -23,9 +23,8 @@
             const store = useStore(storeKey)
 
             onMounted(() => {
-                store.dispatch('musicals/loadItems')
+                store.dispatch('musicals/loadItems', store.state.auth.user?.uid)
             })
-
 
             watch(() => store.state.ui.addPanelOpen, (current) => {
                 addIsOpen.value = current

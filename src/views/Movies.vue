@@ -23,7 +23,7 @@
             const addIsOpen = ref(false)
 
             onMounted(() => {
-                store.dispatch('movies/loadItems')
+                store.dispatch('movies/loadItems', store.state.auth.user?.uid)
                 store.dispatch('movies/loadConfiguration')
             })
 

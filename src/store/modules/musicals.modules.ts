@@ -12,7 +12,8 @@ export default class MusicalModule extends BaseModule<MusicalState> {
     public state(): MusicalState {
         return {
             items: {},
-            dataPath: '/musicals'
+            dataPath: 'musicals',
+            userId: ''
         }
     }
 

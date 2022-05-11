@@ -15,13 +15,15 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
 
     public abstract state(): T
 
+    // This is a hook for performing processing before the an item is updated
     protected abstract Preprocess({ state }: ActionContext<T, RootState>, item: ItemData): Promise<ItemData>
 
     public getters: GetterTree<T, RootState> = {
         getRatedItems: this.getRatedItems,
         getUnratedItems: this.getUnratedItems,
         getStats: this.getStats,
-        getGraphData: this.getGraphData
+        getGraphData: this.getGraphData,
+        setUserId: this.setUserId
     }
 
     public actions: ActionTree<T, RootState> = {
@@ -33,7 +35,8 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
     }
 
     public mutations: MutationTree<T> = {
-        setItems: this.setItems
+        setItems: this.setItems,
+        setUserId: this.setUserId
     }
 
     // Getters
@@ -122,11 +125,16 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
         state.items = items
     }
 
+    private setUserId(state: T, userId: string): void {
+        state.userId = userId
+    }
+
     // Actions
-    private async loadItems({ state, commit }: ActionContext<T, RootState>): Promise<void> {
+    private async loadItems({ state, commit }: ActionContext<T, RootState>, userId: string): Promise<void> {
         // No need to subscribe again
+        commit('setUserId', userId)
         if (!Object.keys(state.items).length) {
-            const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
+            const databaseRef = ref(getDatabase(this.firebase), `/${state.userId}/${state.dataPath}`)
             onValue(databaseRef, (snapshot) => {
                 commit('setItems', snapshot.val())
             })
@@ -134,18 +142,18 @@ export default abstract class BaseModule<T extends BaseState> implements Module<
     }
 
     private async addItem({ state }: ActionContext<T, RootState>, item: ItemData): Promise<void> {
-        const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
+        const databaseRef = ref(getDatabase(this.firebase), `/${state.userId}/${state.dataPath}`)
         const payload : Omit<ItemData, 'year'> = { ...item }
         await push(databaseRef, { ...payload, year: item.year?.toISOString() || null })
     }
 
     private async removeItem({ state }: ActionContext<T, RootState>, key: string): Promise<void> {
-        await remove(ref(getDatabase(this.firebase),`${state.dataPath}/${key}`))
+        await remove(ref(getDatabase(this.firebase),`/${state.userId}/${state.dataPath}/${key}`))
     }
 
     private async updateItem({ state, dispatch }: ActionContext<T, RootState>, request: { item: ItemData, key: string }): Promise<void> {
         const data = await dispatch('preprocess', request.item)
-        const databaseRef = ref(getDatabase(this.firebase), state.dataPath)
+        const databaseRef = ref(getDatabase(this.firebase), `/${state.userId}/${state.dataPath}`)
         state.items[request.key] = data
         await update(databaseRef, state.items)
     }

@@ -17,5 +17,6 @@ export interface GraphData {
 
 export default interface BaseState {
     items: Record<string, ItemData>,
-    dataPath: string
+    dataPath: string,
+    userId: string
 }
